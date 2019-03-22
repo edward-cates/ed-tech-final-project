@@ -1,5 +1,6 @@
 
 $charged: #54B7B7;
+$pan-width: 40px;
 
 body {
   background-color: black;
@@ -8,6 +9,25 @@ body {
 }
 
 .board {
+
+  .pan {
+    background-color: gray;
+    position: absolute;
+  }
+
+  .pan-left {
+    height: 100%;
+    left: 0;
+    top: 0;
+    width: $pan-width;
+  }
+
+  .pan-right {
+    height: 100%;
+    right: 0;
+    top: 0;
+    width: $pan-width;
+  }
 
   .square {
     background-color: #2E2E2E;

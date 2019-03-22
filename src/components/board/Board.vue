@@ -1,13 +1,25 @@
 <template>
-  <div class="board">
+  <div
+    ref="board"
+    class="board"
+  >
     <square
       :key="index"
       v-for="index in squares"
     />
+
+    <!-- <div
+      @mouseenter="mouseEnter"
+      class="pan pan-left"
+    /> -->
+
+    <!-- <div class="pan pan-right" /> -->
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 import Square from './Square'
 
 export default {
@@ -23,8 +35,15 @@ export default {
     }
 
     return {
+      position: { x: 0, y: 0 },
       squares,
     }
+  },
+  methods: {
+    mouseEnter($ev) {
+      console.log($ev)
+      console.log(this.$refs.board)
+    },
   },
 }
 </script>
