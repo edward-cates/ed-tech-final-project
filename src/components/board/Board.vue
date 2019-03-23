@@ -3,22 +3,23 @@
     ref="board"
     class="board"
   >
-    <square
-      :key="index"
-      v-for="index in squares"
-    />
-
-    <!-- <div
-      @mouseenter="mouseEnter"
-      class="pan pan-left"
-    /> -->
-
-    <!-- <div class="pan pan-right" /> -->
+    <div
+      class="viewport"
+      :style="style"
+    >
+      <square
+        :key="index"
+        v-for="(type, index) in squares"
+        :is-center="isCenterSquare(index)"
+        :label="(index + 1)"
+        :type="type"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 
 import Square from './Square'
 
@@ -27,19 +28,38 @@ export default {
   components: {
     Square,
   },
-  data() {
-    const squares = []
+  computed: {
+    ...mapState('GameBoard', [
+      'boardHeight',
+      'boardShiftX',
+      'boardShiftY',
+      'boardWidth',
+      'isLoading',
+      'squares',
+    ]),
+    style() {
+      const shift = `left: ${this.boardShiftX}px; top: ${this.boardShiftY}px`
+      if (this.boardWidth && this.boardHeight) {
+        return `${shift}; width: ${this.boardWidth}px; height: ${this.boardHeight}px`
+      }
+      return shift
+    },
+  },
+  mounted() {
+    const board = this.$refs.board.getBoundingClientRect()
 
-    for (let i = 0; i < 100; ++i) {
-      squares[i] = i
-    }
-
-    return {
-      position: { x: 0, y: 0 },
-      squares,
-    }
+    this.loadViewport({
+      board,
+    })
   },
   methods: {
+    ...mapActions('GameBoard', [
+      'loadViewport',
+    ]),
+    isCenterSquare(index) {
+      const centerIndex = Math.floor(this.squares.length / 2)
+      return index === centerIndex
+    },
     mouseEnter($ev) {
       console.log($ev)
       console.log(this.$refs.board)

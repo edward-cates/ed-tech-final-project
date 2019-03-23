@@ -4,44 +4,45 @@ $pan-width: 40px;
 
 body {
   background-color: black;
-  margin: 0;
   color: white;
-}
+  margin: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
 
-.board {
-
-  .pan {
-    background-color: gray;
-    position: absolute;
-  }
-
-  .pan-left {
+  #app {
+    width: 100%;
     height: 100%;
-    left: 0;
-    top: 0;
-    width: $pan-width;
   }
 
-  .pan-right {
+  .board {
     height: 100%;
-    right: 0;
-    top: 0;
-    width: $pan-width;
-  }
+    width: 100%;
 
-  .square {
-    background-color: #2E2E2E;
-    border: 1px solid;
-    border-color: #2E2E2E;
-    border-radius: 10px;
-    display: inline-block;
-    margin-right: 4px;
-    height: 100px;
-    width: 100px;
+    .viewport {
+      position: relative;
+    }
 
-    &:hover {
-      border-color: $charged;
+    .square {
+      background-color: #2E2E2E;
+      border: 1px solid;
+      border-color: #2E2E2E;
+      border-radius: 10px;
+      display: inline-block;
+      margin: 2px 2px;
+      height: 100px;
+      width: 100px;
+
+      &:hover {
+        border-color: $charged;
+      }
+    }
+
+    .square-center {
+      background-color: gray;
     }
   }
-
 }
