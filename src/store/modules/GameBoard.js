@@ -1,4 +1,15 @@
 
+const levels = [
+  {
+    25: {
+      cl: 'grn-btn',
+    },
+    29: {
+      cl: 'org-lgt',
+    },
+  },
+]
+
 const state = {
   boardHeight: 0,
   boardShiftX: 0,
@@ -29,7 +40,7 @@ const mutations = {
     const squares = []
 
     for (let i = 0; i < vertBoxes * horizBoxes; ++i) {
-      squares[i] = Math.round(Math.random() * 100) % 2
+      squares[i] = levels[0][i] || 'blank'
     }
 
     state.squares = squares

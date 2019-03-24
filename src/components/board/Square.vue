@@ -3,8 +3,13 @@
     :class="clss"
   >
     <img
-      v-if="isGrnPwr"
-      src="@/assets/img/grn-pwr-btn.svg"
+      v-if="type.cl === 'grn-btn'"
+      src="@/assets/img/grn-btn/on/nesw.svg"
+    />
+
+    <img
+      v-else-if="type.cl === 'org-lgt'"
+      src="@/assets/img/org-lgt/on/w.svg"
     />
 
     <img
@@ -32,9 +37,6 @@ export default {
         return 'square square-center'
       }
       return 'square'
-    },
-    isGrnPwr() {
-      return this.type === 1
     },
   },
 }
