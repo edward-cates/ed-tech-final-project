@@ -1,10 +1,11 @@
 <template>
   <div
     :class="clss"
+    @mousedown="mouseDown"
   >
     <img
       v-if="type.cl === 'grn-btn'"
-      src="@/assets/img/grn-btn/on/nesw.svg"
+      src="@/assets/img/grn-btn/off/nesw.svg"
     />
 
     <img
@@ -37,6 +38,11 @@ export default {
         return 'square square-center'
       }
       return 'square'
+    },
+  },
+  methods: {
+    mouseDown($ev) {
+      $ev.preventDefault()
     },
   },
 }
