@@ -57,7 +57,7 @@ const mutations = {
       } else if (cl === 'n' || cl === 's') {
         cl = 'ns'
       }
-      return cl
+      return `wire-${cl}`
     }
 
     /**
@@ -78,46 +78,36 @@ const mutations = {
        * Assume either rowIx or colIx changed by 1.
        * This should be enforced by calling function.
        */
-      if (rowIx < lastRowIx) {
-        // went north
-        lastSq.connection.second = 'n'
-        // assume continuation
-        Object.assign(connection, {
-          first: 's',
-          second: 'n',
-        })
-      } else if (rowIx > lastRowIx) {
-        // went south
-        lastSq.connection.second = 's'
-        // assume continuation
-        Object.assign(connection, {
-          first: 'n',
-          second: 's',
-        })
-      } else if (colIx < lastColIx) {
-        // went west
-        lastSq.connection.second = 'w'
-        // assume continuation
-        Object.assign(connection, {
-          first: 'e',
-          second: 'w',
-        })
-      } else if (colIx > lastColIx) {
-        // went east
-        lastSq.connection.second = 'e'
-        // assume continuation
-        Object.assign(connection, {
-          first: 'w',
-          second: 'e',
-        })
+      const map = {
+        '-1': { 0: 'n' },
+        '1': { 0: 's' },
+        '0': {
+          '-1': 'w',
+          '1': 'e',
+        },
       }
 
-      lastSq.cl = `wire-${getCl(lastSq.connection)}`
+      lastSq.connection.second = map[rowIx - lastRowIx][colIx - lastColIx]
+
+      Object.assign(connection, {
+        first: map[lastRowIx - rowIx][lastColIx - colIx],
+        second: lastSq.connection.second,
+      })
+
+      if (lastSq.cl !== 'wire-nsew') {
+        lastSq.cl = getCl(lastSq.connection)
+      }
     }
 
-    if (!state.squares[rowIx][colIx].cl) {
+    const sq = state.squares[rowIx][colIx]
+    const cl = getCl(connection)
+
+    if ((sq.cl === 'wire-ew' && cl === 'wire-ns')
+      || (sq.cl === 'wire-ns' && cl === 'wire-ew')) {
+      sq.cl = 'wire-nsew'
+    } else if (!sq.cl) {
       Vue.set(state.squares[rowIx], colIx, {
-        cl: `wire-${getCl(connection)}`,
+        cl,
         connection,
         tmp: true,
       })
@@ -216,6 +206,8 @@ const actions = {
             commit('appendMousePath', { rowIx, colIx: colIx + colDiff })
           } else if (!state.squares[rowIx + rowDiff][colIx].cl) {
             commit('appendMousePath', { rowIx: rowIx + rowDiff, colIx })
+          } else {
+            // TODO termination condition
           }
         }
       }

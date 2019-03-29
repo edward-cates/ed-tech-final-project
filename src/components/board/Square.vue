@@ -7,7 +7,7 @@
   >
     <img
       v-if="square.cl === 'grn-btn'"
-      src="@/assets/img/grn-btn/off/nesw.svg"
+      src="@/assets/img/grn-btn/off/nsew.svg"
     />
 
     <img
@@ -43,6 +43,11 @@
     <img
       v-else-if="square.cl === 'wire-ew'"
       src="@/assets/img/wire/off/ew.svg"
+    />
+
+    <img
+      v-else-if="square.cl === 'wire-nsew'"
+      src="@/assets/img/wire/off/nsew.svg"
     />
 
     <img
