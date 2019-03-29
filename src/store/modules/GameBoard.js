@@ -3,7 +3,7 @@ import Vue from 'vue'
 const levels = [
   {
     2: {
-      3: { cl: 'grn-btn' },
+      3: { cl: 'grn-btn-off' },
       7: { cl: 'org-lgt' },
     },
   },
@@ -124,7 +124,8 @@ const mutations = {
     state.squares.forEach((row) => {
       row.forEach((square, colIx) => {
         if (square.tmp) {
-          Vue.set(row, colIx, {})
+          square.tmp = false
+          // Vue.set(row, colIx, {})
         }
       })
     })    
@@ -218,7 +219,23 @@ const actions = {
 
   mouseUp({ commit }) {
     if (state.mousePath) {
-      commit('finalizeMousePath')
+      const { rowIx: rowSx, colIx: colSx } = state.mousePath.start
+      const { rowIx: rowEx, colIx: colEx } = state.mousePath.end
+      if (rowSx === rowEx && colSx === colEx) {
+        // clicked one square
+        const sq = state.squares[rowSx][colSx]
+        if (sq.cl.indexOf('btn') > -1) {
+          // power button click
+          if (sq.cl.indexOf('off') > -1) {
+            sq.cl = sq.cl.replace('off', 'on')
+          } else {
+            sq.cl = sq.cl.replace('on', 'off')
+          }
+        }
+        state.mousePath = null
+      } else {
+        commit('finalizeMousePath')
+      }
     }
   },
 }

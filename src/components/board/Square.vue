@@ -6,8 +6,13 @@
     @mouseup="mouseUp"
   >
     <img
-      v-if="square.cl === 'grn-btn'"
+      v-if="square.cl === 'grn-btn-off'"
       src="@/assets/img/grn-btn/off/nsew.svg"
+    />
+
+    <img
+      v-else-if="square.cl === 'grn-btn-on'"
+      src="@/assets/img/grn-btn/on/nsew.svg"
     />
 
     <img
