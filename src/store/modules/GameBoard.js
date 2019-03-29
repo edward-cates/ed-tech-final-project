@@ -33,6 +33,33 @@ const mutations = {
    * Needs to take into account input/output directions.
    */
   appendMousePath(state, { rowIx, colIx }) {
+    const connection = {
+      first: 'e',
+      second: 'w',
+    }
+
+    const getCl = ({ first, second }) => {
+      let cl = ''
+      if (first === 'n' || second === 'n') {
+        cl = `${cl}n`
+      }
+      if (first === 's' || second === 's') {
+        cl = `${cl}s`
+      }
+      if (first === 'e' || second === 'e') {
+        cl = `${cl}e`
+      }
+      if (first === 'w' || second === 'w') {
+        cl = `${cl}w`
+      }
+      if (cl === 'e' || cl === 'w') {
+        cl = 'ew'
+      } else if (cl === 'n' || cl === 's') {
+        cl = 'ns'
+      }
+      return cl
+    }
+
     /**
      * TODO modify last connector and current one
      * so that the align.
@@ -45,14 +72,53 @@ const mutations = {
         colIx: lastColIx,
       } = state.mousePath.stack[stackLength - 1]
 
-      if (state.squares[lastRowIx][lastColIx].tmp) {
-        state.squares[lastRowIx][lastColIx].cl = 'grn-btn'
+      const lastSq = state.squares[lastRowIx][lastColIx]
+
+      /**
+       * Assume either rowIx or colIx changed by 1.
+       * This should be enforced by calling function.
+       */
+      if (rowIx < lastRowIx) {
+        // went north
+        lastSq.connection.second = 'n'
+        // assume continuation
+        Object.assign(connection, {
+          first: 's',
+          second: 'n',
+        })
+      } else if (rowIx > lastRowIx) {
+        // went south
+        lastSq.connection.second = 's'
+        // assume continuation
+        Object.assign(connection, {
+          first: 'n',
+          second: 's',
+        })
+      } else if (colIx < lastColIx) {
+        // went west
+        lastSq.connection.second = 'w'
+        // assume continuation
+        Object.assign(connection, {
+          first: 'e',
+          second: 'w',
+        })
+      } else if (colIx > lastColIx) {
+        // went east
+        lastSq.connection.second = 'e'
+        // assume continuation
+        Object.assign(connection, {
+          first: 'w',
+          second: 'e',
+        })
       }
+
+      lastSq.cl = `wire-${getCl(lastSq.connection)}`
     }
 
     if (!state.squares[rowIx][colIx].cl) {
       Vue.set(state.squares[rowIx], colIx, {
-        cl: 'wire',
+        cl: `wire-${getCl(connection)}`,
+        connection,
         tmp: true,
       })
     }
@@ -131,6 +197,29 @@ const actions = {
 
   mouseEnter({ state, commit }, { rowIx, colIx }) {
     if (state.mousePath) {
+      /**
+       * Check for diagonal movement
+       */
+      const stackLength = state.mousePath.stack.length
+
+      if (stackLength) {
+        const {
+          rowIx: lastRowIx,
+          colIx: lastColIx,
+        } = state.mousePath.stack[stackLength - 1]
+
+        if (rowIx !== lastRowIx && colIx !== lastColIx) {
+          const rowDiff = lastRowIx - rowIx
+          const colDiff = lastColIx - colIx
+
+          if (!state.squares[rowIx][colIx + colDiff].cl) {
+            commit('appendMousePath', { rowIx, colIx: colIx + colDiff })
+          } else if (!state.squares[rowIx + rowDiff][colIx].cl) {
+            commit('appendMousePath', { rowIx: rowIx + rowDiff, colIx })
+          }
+        }
+      }
+
       commit('appendMousePath', { rowIx, colIx })
     }
   },

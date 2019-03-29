@@ -16,7 +16,32 @@
     />
 
     <img
-      v-else-if="square.cl === 'wire'"
+      v-else-if="square.cl === 'wire-ne'"
+      src="@/assets/img/wire/off/ne.svg"
+    />
+
+    <img
+      v-else-if="square.cl === 'wire-ns'"
+      src="@/assets/img/wire/off/ns.svg"
+    />
+
+    <img
+      v-else-if="square.cl === 'wire-nw'"
+      src="@/assets/img/wire/off/nw.svg"
+    />
+
+    <img
+      v-else-if="square.cl === 'wire-se'"
+      src="@/assets/img/wire/off/se.svg"
+    />
+
+    <img
+      v-else-if="square.cl === 'wire-sw'"
+      src="@/assets/img/wire/off/sw.svg"
+    />
+
+    <img
+      v-else-if="square.cl === 'wire-ew'"
       src="@/assets/img/wire/off/ew.svg"
     />
 
