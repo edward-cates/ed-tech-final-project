@@ -7,19 +7,26 @@
       class="viewport"
       :style="style"
     >
-      <square
-        :key="index"
-        v-for="(type, index) in squares"
-        :is-center="isCenterSquare(index)"
-        :label="(index + 1)"
-        :type="type"
-      />
+      <div
+        :key="rowIx"
+        v-for="(row, rowIx) in squares"
+      >
+        <square
+          :key="colIx"
+          v-for="(sq, colIx) in row"
+          :is-center="isCenterSquare({ rowIx, colIx })"
+          :square="sq"
+          @mouseDown="mouseDown({ rowIx, colIx })"
+          @mouseEnter="mouseEnter({ rowIx, colIx })"
+          @mouseUp="mouseUp({ rowIx, colIx })"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 import Square from './Square'
 
@@ -55,14 +62,13 @@ export default {
   methods: {
     ...mapActions('GameBoard', [
       'loadViewport',
+      'mouseDown',
+      'mouseEnter',
+      'mouseUp',
     ]),
-    isCenterSquare(index) {
-      const centerIndex = Math.floor(this.squares.length / 2)
-      return index === centerIndex
-    },
-    mouseEnter($ev) {
-      console.log($ev)
-      console.log(this.$refs.board)
+    isCenterSquare({ rowIx, colIx }) {
+      return rowIx === Math.floor(this.squares.length / 2)
+        && colIx === Math.floor(this.squares[rowIx].length / 2)
     },
   },
 }

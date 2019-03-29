@@ -2,15 +2,22 @@
   <div
     :class="clss"
     @mousedown="mouseDown"
+    @mouseenter="$emit('mouseEnter')"
+    @mouseup="mouseUp"
   >
     <img
-      v-if="type.cl === 'grn-btn'"
+      v-if="square.cl === 'grn-btn'"
       src="@/assets/img/grn-btn/off/nesw.svg"
     />
 
     <img
-      v-else-if="type.cl === 'org-lgt'"
+      v-else-if="square.cl === 'org-lgt'"
       src="@/assets/img/org-lgt/on/w.svg"
+    />
+
+    <img
+      v-else-if="square.cl === 'wire'"
+      src="@/assets/img/wire/off/ew.svg"
     />
 
     <img
@@ -30,7 +37,7 @@ export default {
       required: true,
     },
     label: {},
-    type: {},
+    square: {},
   },
   computed: {
     clss() {
@@ -43,7 +50,12 @@ export default {
   methods: {
     mouseDown($ev) {
       $ev.preventDefault()
+      this.$emit('mouseDown')
     },
+    mouseUp($ev) {
+      $ev.preventDefault()
+      this.$emit('mouseUp')
+    }
   },
 }
 </script>
