@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import { stat } from 'fs';
 
 const levels = [
   {
@@ -34,20 +33,32 @@ const mutations = {
    * Needs to take into account input/output directions.
    */
   appendMousePath(state, { rowIx, colIx }) {
-    state.mousePath.end = { rowIx, colIx }
-    state.mousePath.stack.push(state.mousePath.end)
+    /**
+     * TODO modify last connector and current one
+     * so that the align.
+     */
+    const stackLength = state.mousePath.stack.length
+
+    if (stackLength) {
+      const {
+        rowIx: lastRowIx,
+        colIx: lastColIx,
+      } = state.mousePath.stack[stackLength - 1]
+
+      if (state.squares[lastRowIx][lastColIx].tmp) {
+        state.squares[lastRowIx][lastColIx].cl = 'grn-btn'
+      }
+    }
 
     if (!state.squares[rowIx][colIx].cl) {
-      /**
-       * TODO modify last connector and current one
-       * so that the align.
-       */
-
-      Vue.set(state.squares[state.mousePath.end.rowIx], state.mousePath.end.colIx, {
+      Vue.set(state.squares[rowIx], colIx, {
         cl: 'wire',
         tmp: true,
       })
     }
+
+    state.mousePath.end = { rowIx, colIx }
+    state.mousePath.stack.push(state.mousePath.end)
   },
 
   finalizeMousePath(state) {
