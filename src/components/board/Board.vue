@@ -110,7 +110,7 @@ export default {
   methods: {
     ...mapActions('GameBoard', [
       'loadViewport',
-      'mouseDown',
+      // 'mouseDown',
       // 'mouseEnter',
       // 'mouseUp',
       'pan',
@@ -119,6 +119,11 @@ export default {
       if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].indexOf(ev.key) > -1) {
         ev.preventDefault()
         this.pan(ev.key.substring('Arrow'.length))
+      }
+    },
+    mouseDown({ rowIx, colIx }) {
+      if (!this.currentTool) {
+        this.$store.dispatch('GameBoard/mouseDown', { rowIx, colIx })
       }
     },
     mouseEnter({ sq, rowIx, colIx }) {

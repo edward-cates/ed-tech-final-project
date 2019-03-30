@@ -227,7 +227,7 @@ const mutations = {
       const lastState = isOn ? 'off' : 'on'
       const currentState = isOn ? 'on' : 'off'
 
-      const delay = async () => new Promise(resolve => setTimeout(resolve, 20))
+      const delay = async () => new Promise(resolve => setTimeout(resolve, 10))
 
       if (sq.cl.indexOf('wire-nsew') > -1) {
         /**
