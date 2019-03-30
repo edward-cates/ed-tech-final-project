@@ -34,10 +34,13 @@ const mutations = {
    * Needs to take into account input/output directions.
    */
   appendMousePath(state, { rowIx, colIx }) {
-    const connection = {
-      first: { rowDiff: 0, colDiff: -1 },
-      second: { rowDiff: 0, colDiff: 1 },
-    }
+    /**
+     * For the first wire, we need some logic
+     * to pick the best first wire.
+     * For the rest, the direction will be updated
+     * based on the previous wire segment.
+     */
+    const connection = {}
 
     const getCl = ({ first, second }) => {
       let cl = ''
@@ -95,6 +98,22 @@ const mutations = {
       if (lastSq.cl !== 'wire-nsew-off') {
         lastSq.cl = getCl(lastSq.conn)
       }
+    } else {
+      /**
+       * Need to figured out initial values for `connection` here.
+       * Look for nearby buttons and lights, and try to optimize
+       * connections to those.
+       */
+      for (let rowDiff = -1; !connection.second && rowDiff <= 1; ++rowDiff) {
+        for (let colDiff = -1; !connection.second && colDiff <= 1; ++colDiff) {
+          const sq = state.squares[rowIx + rowDiff][colIx + colDiff]
+          if (sq.cl && sq.cl.indexOf('btn') > -1) {
+            connection.first = { rowDiff, colDiff }
+            // assume straight line
+            connection.second = { rowDiff: -rowDiff, colDiff: -colDiff }
+          }
+        }
+      }
     }
 
     const sq = state.squares[rowIx][colIx]
@@ -115,8 +134,8 @@ const mutations = {
     state.mousePath.stack.push(state.mousePath.end)
   },
 
-  evaluateBoard(state) {
-    const evaluateSquare = ({
+  async evaluateBoard(state) {
+    const evaluateSquare = async ({
       rowDiff,
       colDiff,
       rowIx,
@@ -134,11 +153,12 @@ const mutations = {
 
       if (sq.cl.indexOf('wire') > -1) {
         if (-rowDiff === sq.conn.first.rowDiff && -colDiff === sq.conn.first.colDiff) {
+          await new Promise(resolve => setTimeout(resolve, 10))
           sq.cl = sq.cl.replace(lastState, currentState)
 
           evaluateSquare({
-            lastRowIx: rowIx,
-            lastColIx: colIx,
+            rowDiff: sq.conn.second.rowDiff,
+            colDiff: sq.conn.second.colDiff,
             rowIx: rowIx + sq.conn.second.rowDiff,
             colIx: colIx + sq.conn.second.colDiff,
             isOn,
@@ -149,22 +169,27 @@ const mutations = {
 
     const level = levels[state.currentLevel]
 
-    Object.keys(level).forEach((rowIx) => {
-      Object.keys(level[rowIx]).forEach((colIx) => {
+    await Promise.all(Object.keys(level).map(async (rowIx) => {
+      await Promise.all(Object.keys(level[rowIx]).map(async (colIx) => {
         const sq = state.squares[rowIx][colIx]
         if (sq.cl.indexOf('btn') > -1) {
           // power button
-          // send power right
-          evaluateSquare({
-            rowDiff: 0,
-            colDiff: 1,
-            rowIx: (+rowIx),
-            colIx: (+colIx) + 1,
-            isOn: sq.cl.indexOf('on') > -1,
-          })
+          for (let rowDiff = -1; rowDiff <= 1; ++rowDiff) {
+            for (let colDiff = -1; colDiff <= 1; ++colDiff) {
+              if (rowDiff !== 0 || colDiff !== 0) {
+                await evaluateSquare({
+                  rowDiff,
+                  colDiff,
+                  rowIx: (+rowIx) + rowDiff,
+                  colIx: (+colIx) + colDiff,
+                  isOn: sq.cl.indexOf('on') > -1,
+                })
+              }
+            }
+          }
         }
-      })
-    })
+      }))
+    }))
   },
 
   finalizeMousePath(state) {
