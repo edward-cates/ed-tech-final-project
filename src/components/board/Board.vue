@@ -17,7 +17,8 @@
           v-for="(sq, colIx) in row"
           :square="sq"
           @mouseDown="mouseDown({ rowIx, colIx })"
-          @mouseEnter="mouseEnter({ rowIx, colIx })"
+          @mouseEnter="mouseEnter({ sq, rowIx, colIx })"
+          @mouseLeave="mouseLeave({ sq })"
           @mouseUp="mouseUp({ rowIx, colIx })"
         />
       </div>
@@ -31,14 +32,14 @@
         Toolbox
         <img class="icon" v-if="!isToolboxOpen" src="@/assets/img/caret-down.svg" />
         <img class="icon" v-else src="@/assets/img/caret-up.svg" />
-
-        <div v-if="isToolboxOpen" class="dropdown toolbox">
-          <square
-            :key="index"
-            v-for="(tool, index) in tools"
-            :square="tool"
-          />
-        </div>
+      </div>
+      <div v-if="isToolboxOpen" class="dropdown toolbox">
+        <square
+          :key="index"
+          v-for="(tool, index) in tools"
+          :square="tool"
+          @mouseDown="currentTool = tool"
+        />
       </div>
 
       <div class="menu-bar">
@@ -55,6 +56,8 @@
 </template>
 
 <script>
+import Vue from 'vue'
+
 import { mapState, mapGetters, mapActions } from 'vuex'
 
 import Square from './Square'
@@ -66,6 +69,8 @@ export default {
   },
   data() {
     return {
+      currentSquare: null,
+      currentTool: null,
       isToolboxOpen: false,
     }
   },
@@ -106,14 +111,41 @@ export default {
     ...mapActions('GameBoard', [
       'loadViewport',
       'mouseDown',
-      'mouseEnter',
-      'mouseUp',
+      // 'mouseEnter',
+      // 'mouseUp',
       'pan',
     ]),
     keyDown(ev) {
       if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].indexOf(ev.key) > -1) {
         ev.preventDefault()
         this.pan(ev.key.substring('Arrow'.length))
+      }
+    },
+    mouseEnter({ sq, rowIx, colIx }) {
+      this.currentSquare = sq
+
+      if (this.currentTool) {
+        if (!sq.cl) {
+          // this line must be first for some reason
+          Vue.set(sq, 'cl', this.currentTool.cl)
+          Object.assign(sq, this.currentTool, { tmp: true })
+        }
+      } else {
+        this.$store.dispatch('GameBoard/mouseEnter', { rowIx, colIx })
+      }
+    },
+    mouseLeave({ sq }) {
+      if (this.currentTool && sq.tmp) {
+        sq.cl = undefined
+      }
+    },
+    mouseUp(pos) {
+      if (this.currentTool) {
+        this.currentSquare.tmp = false
+        this.currentTool = null
+        this.isToolboxOpen = false
+      } else {
+        this.$store.dispatch('GameBoard/mouseUp', pos)
       }
     },
     scroll(ev) {

@@ -3,6 +3,7 @@
     class="square"
     @mousedown="mouseDown"
     @mouseenter="$emit('mouseEnter')"
+    @mouseleave="$emit('mouseLeave')"
     @mouseup="$emit('mouseUp')"
   >
     <!-- buttons -->
@@ -37,7 +38,7 @@
     <img v-else-if="square.cl === 'wire-nsew-vert-on-horiz-on'" src="@/assets/img/wire/on/nsew-both.svg" />
 
     <!-- gates -->
-    <img v-else-if="square.cl === 'not-gate-0'" src="@/assets/img/not-gate/1.png" />
+    <img v-else-if="square.cl === 'not-gate-0'" src="@/assets/img/not-gate/0.png" />
     <img v-else-if="square.cl === 'not-gate-1'" src="@/assets/img/not-gate/1.png" />
 
     <!-- blank -->

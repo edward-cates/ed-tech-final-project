@@ -14,20 +14,15 @@ const levels = [
       },
     },
     tools: [
-      { cl: 'not-gate-0' },
-      { cl: 'not-gate-0' },
-      { cl: 'not-gate-0' },
-      { cl: 'not-gate-0' },
-      { cl: 'not-gate-0' },
-      { cl: 'not-gate-0' },
-      { cl: 'not-gate-0' },
-      { cl: 'not-gate-0' },
-      { cl: 'not-gate-0' },
-      { cl: 'not-gate-0' },
-      { cl: 'not-gate-0' },
-      { cl: 'not-gate-0' },
-      { cl: 'not-gate-0' },
-      { cl: 'not-gate-0' },
+      {
+        cl: 'not-gate-0',
+        inputs: [
+          { rowDiff: 0, colDiff: -1 },
+        ],
+        outputs: [
+          { rowDiff: 0, colDiff: 1 },
+        ],
+      },
     ],
   },
 ]
@@ -386,8 +381,20 @@ const actions = {
      * connections to those.
      */
     [[0,-1],[0,1],[-1,0],[1,0]].forEach(([rowDiff, colDiff]) => {
+      let aligns = false
+
       const sq = state.squares[rowIx + rowDiff][colIx + colDiff]
+
       if (sq.cl && sq.cl.indexOf('btn') > -1) {
+        aligns = true
+      } else if (sq.cl && sq.cl.indexOf('gate') > -1) {
+        /**
+         * A gate output must align with diffs
+         */
+        aligns = sq.outputs.some(({ rowDiff: rd, colDiff: cd }) => rowDiff === -rd && colDiff === -cd)
+      }
+
+      if (aligns) {
         commit('initializeMousePath', { rowIx, colIx })
         commit('appendMousePath', {
           rowIx,
