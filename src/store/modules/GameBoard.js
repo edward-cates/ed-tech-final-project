@@ -9,7 +9,7 @@ const levels = [
     squares: {
       2: {
         1: { cl: 'pnk-btn-off' },
-        // 9: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
+        9: { cl: 'blu-lgt-s-off', conn: { rowDiff: 1, colDiff: 0 } },
       },
       4: {
         1: { cl: 'grn-btn-off' },

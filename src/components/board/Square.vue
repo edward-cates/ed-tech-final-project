@@ -15,10 +15,14 @@
     <img v-else-if="square.cl === 'pnk-btn-on'" src="@/assets/img/pnk-btn/on/nsew.svg" />
 
     <!-- lights -->
-    <!---- off ---->
+    <!---- orange ---->
     <img v-else-if="square.cl === 'org-lgt-w-off'" src="@/assets/img/org-lgt/off/w.svg" />
-    <!---- on ---->
     <img v-else-if="square.cl === 'org-lgt-w-on'" src="@/assets/img/org-lgt/on/w.svg" />
+    <!---- blue ---->
+    <img v-else-if="square.cl === 'blu-lgt-s-off'" src="@/assets/img/blu-lgt/off/s.svg" />
+    <img v-else-if="square.cl === 'blu-lgt-w-off'" src="@/assets/img/blu-lgt/off/w.svg" />
+    <img v-else-if="square.cl === 'blu-lgt-s-on'" src="@/assets/img/blu-lgt/on/s.svg" />
+    <img v-else-if="square.cl === 'blu-lgt-w-on'" src="@/assets/img/blu-lgt/on/w.svg" />
 
     <!-- wires -->
     <!---- off ---->
