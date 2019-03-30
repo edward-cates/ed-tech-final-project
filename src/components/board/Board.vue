@@ -126,9 +126,8 @@ export default {
 
       if (this.currentTool) {
         if (!sq.cl) {
-          // this line must be first for some reason
           Vue.set(sq, 'cl', this.currentTool.cl)
-          Object.assign(sq, this.currentTool, { tmp: true })
+          sq.tmp = true
         }
       } else {
         this.$store.dispatch('GameBoard/mouseEnter', { rowIx, colIx })
@@ -137,11 +136,12 @@ export default {
     mouseLeave({ sq }) {
       if (this.currentTool && sq.tmp) {
         sq.cl = undefined
+        sq.tmp = undefined
       }
     },
     mouseUp(pos) {
       if (this.currentTool) {
-        this.currentSquare.tmp = false
+        Object.assign(this.currentSquare, this.currentTool.create(), { tmp: false })
         this.currentTool = null
         this.isToolboxOpen = false
       } else {
