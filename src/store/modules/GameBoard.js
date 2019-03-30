@@ -1,5 +1,7 @@
 import Vue from 'vue'
 
+import GATE from './gates'
+
 const sideLength = 100 + 2 + 4 // width + border + margin
 
 const levels = [
@@ -14,19 +16,8 @@ const levels = [
       },
     },
     tools: [
-      {
-        cl: 'not-gate-0',
-        inputs: [
-          { rowDiff: 0, colDiff: -1, isOn: false },
-        ],
-        outputs: [
-          { rowDiff: 0, colDiff: 1, isOn: true },
-        ],
-        evaluate: function evaluate() {
-          const isOutOn = this.outputs[0].isOn = !this.inputs[0].isOn
-          this.cl = `not-gate-${isOutOn ? '0' : '1'}`
-        },
-      },
+      GATE.NOT,
+      GATE.OR,
     ],
   },
 ]
@@ -164,7 +155,7 @@ const mutations = {
       const lastState = isOn ? 'off' : 'on'
       const currentState = isOn ? 'on' : 'off'
 
-      const delay = async () => new Promise(resolve => setTimeout(resolve, 10))
+      const delay = async () => new Promise(resolve => setTimeout(resolve, 30))
 
       if (sq.cl.indexOf('wire-nsew') > -1) {
         /**
@@ -227,7 +218,7 @@ const mutations = {
             colDiff: out.colDiff,
             rowIx: rowIx + out.rowDiff,
             colIx: colIx + out.colDiff,
-            isOn: console.log(out.isOn) || out.isOn,
+            isOn: out.isOn,
           })))
         }
       }
