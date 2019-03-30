@@ -299,7 +299,7 @@ const actions = {
      * Look for nearby buttons and lights, and try to optimize
      * connections to those.
      */
-    [[0,0],[0,-1],[0,1],[-1,0],[1,0]].forEach(([rowDiff, colDiff]) => {
+    [[0,-1],[0,1],[-1,0],[1,0]].forEach(([rowDiff, colDiff]) => {
       const sq = state.squares[rowIx + rowDiff][colIx + colDiff]
       if (sq.cl && sq.cl.indexOf('btn') > -1) {
         commit('initializeMousePath', { rowIx, colIx })
@@ -356,17 +356,15 @@ const actions = {
     }
   },
 
-  mouseUp({ commit }) {
+  mouseUp({ commit }, pos) {
     if (state.mousePath) {
-      const { rowIx: rowSx, colIx: colSx } = state.mousePath.start
-      const { rowIx: rowEx, colIx: colEx } = state.mousePath.end
-      if (rowSx === rowEx && colSx === colEx
-        && state.squares[rowSx][colSx].cl.indexOf('btn') > -1) {
+      commit('finalizeMousePath')
+    } else if (pos) {
+      const { rowIx, colIx } = pos
+      const sq = state.squares[rowIx][colIx]
+      if (sq.cl && sq.cl.indexOf('btn') > -1) {
         // power button click
-        commit('togglePower', { rowIx: rowSx, colIx: colSx })
-        state.mousePath = null
-      } else {
-        commit('finalizeMousePath')
+        commit('togglePower', { rowIx, colIx })
       }
     }
 

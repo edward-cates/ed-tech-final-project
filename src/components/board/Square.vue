@@ -3,6 +3,7 @@
     class="square"
     @mousedown="mouseDown"
     @mouseenter="$emit('mouseEnter')"
+    @mouseup="$emit('mouseUp')"
   >
     <!-- buttons -->
     <img v-if="square.cl === 'grn-btn-off'" src="@/assets/img/grn-btn/off/nsew.svg" />
