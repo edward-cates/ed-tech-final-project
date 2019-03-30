@@ -36,6 +36,10 @@
     <img v-else-if="square.cl === 'wire-nsew-vert-on-horiz-off'" src="@/assets/img/wire/on/nsew-vert.svg" />
     <img v-else-if="square.cl === 'wire-nsew-vert-on-horiz-on'" src="@/assets/img/wire/on/nsew-both.svg" />
 
+    <!-- gates -->
+    <img v-else-if="square.cl === 'not-gate-0'" src="@/assets/img/not-gate/1.png" />
+    <img v-else-if="square.cl === 'not-gate-1'" src="@/assets/img/not-gate/1.png" />
+
     <!-- blank -->
     <img v-else src="@/assets/img/blank-square.svg" style="visibility: hidden" />
   </div>

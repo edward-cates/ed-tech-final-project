@@ -68,7 +68,7 @@ body {
           border-color: $charged;
         }
 
-        img {
+        .icon {
           position: absolute;
           right: 20px;
           top: 20px;
@@ -86,8 +86,15 @@ body {
         }
 
         .toolbox {
+          text-align: center;
           width: 120px;
           height: calc(100vh - 100px);
+          overflow-y: scroll;
+          overflow-x: hidden;
+
+          .square {
+            margin-bottom: 8px;
+          }
         }
       }
     }

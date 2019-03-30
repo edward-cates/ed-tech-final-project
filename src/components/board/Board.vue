@@ -29,21 +29,26 @@
         @click="isToolboxOpen = !isToolboxOpen"
       >
         Toolbox
-        <img v-if="!isToolboxOpen" src="@/assets/img/caret-down.svg" />
-        <img v-else src="@/assets/img/caret-up.svg" />
+        <img class="icon" v-if="!isToolboxOpen" src="@/assets/img/caret-down.svg" />
+        <img class="icon" v-else src="@/assets/img/caret-up.svg" />
 
         <div v-if="isToolboxOpen" class="dropdown toolbox">
+          <square
+            :key="index"
+            v-for="(tool, index) in tools"
+            :square="tool"
+          />
         </div>
       </div>
 
       <div class="menu-bar">
         Objective
-        <img src="@/assets/img/caret-down.svg" />
+        <img class="icon" src="@/assets/img/caret-down.svg" />
       </div>
 
       <div class="menu-bar">
         Controls
-        <img src="@/assets/img/caret-down.svg" />
+        <img class="icon" src="@/assets/img/caret-down.svg" />
       </div>
     </div>
   </div>
@@ -72,6 +77,7 @@ export default {
       'boardWidth',
       'isLoading',
       'squares',
+      'tools',
     ]),
     style() {
       const shift = `left: ${this.boardShiftX}px; top: ${this.boardShiftY}px`
@@ -80,6 +86,14 @@ export default {
       }
       return shift
     },
+  },
+  created() {
+    document.addEventListener('keydown', this.keyDown)
+    // document.addEventListener('mousewheel', this.scroll)
+  },
+  beforeDestroy() {
+    document.removeEventListener('keydown', this.keyDown)
+    // document.removeEventListener('mousewheel', this.scroll)
   },
   mounted() {
     const board = this.$refs.board.getBoundingClientRect()
@@ -94,7 +108,29 @@ export default {
       'mouseDown',
       'mouseEnter',
       'mouseUp',
+      'pan',
     ]),
+    keyDown(ev) {
+      if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].indexOf(ev.key) > -1) {
+        ev.preventDefault()
+        this.pan(ev.key.substring('Arrow'.length))
+      }
+    },
+    scroll(ev) {
+      const thresh = 10
+
+      if (ev.deltaX > thresh) {
+        this.pan('Right')
+      } else if (ev.deltaX < -thresh) {
+        this.pan('Left')
+      }
+
+      if (ev.deltaY > thresh) {
+        this.pan('Down')
+      } else if (ev.deltaY < -thresh) {
+        this.pan('Up')
+      }
+    },
   },
 }
 </script>

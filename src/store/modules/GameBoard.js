@@ -1,18 +1,39 @@
 import Vue from 'vue'
 
+const sideLength = 100 + 2 + 4 // width + border + margin
+
 const levels = [
   {
-    2: {
-      3: { cl: 'grn-btn-off' },
-      7: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
+    squares: {
+      2: {
+        3: { cl: 'grn-btn-off' },
+        7: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
+      },
+      4: {
+        1: { cl: 'grn-btn-off' },
+      },
     },
-    4: {
-      1: { cl: 'grn-btn-off' },
-    },
+    tools: [
+      { cl: 'not-gate-0' },
+      { cl: 'not-gate-0' },
+      { cl: 'not-gate-0' },
+      { cl: 'not-gate-0' },
+      { cl: 'not-gate-0' },
+      { cl: 'not-gate-0' },
+      { cl: 'not-gate-0' },
+      { cl: 'not-gate-0' },
+      { cl: 'not-gate-0' },
+      { cl: 'not-gate-0' },
+      { cl: 'not-gate-0' },
+      { cl: 'not-gate-0' },
+      { cl: 'not-gate-0' },
+      { cl: 'not-gate-0' },
+    ],
   },
 ]
 
 const state = {
+  board: {},
   boardHeight: 0,
   boardShiftX: 0,
   boardShiftY: 0,
@@ -21,6 +42,7 @@ const state = {
   isLoading: true,
   mousePath: null,
   squares: [],
+  tools: [],
   viewport: {},
 }
 
@@ -143,7 +165,7 @@ const mutations = {
       const lastState = isOn ? 'off' : 'on'
       const currentState = isOn ? 'on' : 'off'
 
-      const delay = async () => new Promise(resolve => setTimeout(resolve, 15))
+      const delay = async () => new Promise(resolve => setTimeout(resolve, 10))
 
       if (sq.cl.indexOf('wire-nsew') > -1) {
         /**
@@ -196,19 +218,16 @@ const mutations = {
       }
     }
 
-    const level = levels[state.currentLevel]
-
-    await Promise.all(Object.keys(level).map(async (rowIx) => {
-      await Promise.all(Object.keys(level[rowIx]).map(async (colIx) => {
-        const sq = state.squares[rowIx][colIx]
-        if (sq.cl.indexOf('btn') > -1) {
+    await Promise.all(state.squares.map(async (row, rowIx) => {
+      await Promise.all(row.map(async (sq, colIx) => {
+        if (sq.cl && sq.cl.indexOf('btn') > -1) {
           // power button
           await Promise.all([[0,-1],[0,1],[-1,0],[1,0]].map(async ([rowDiff, colDiff]) => {
             await evaluateSquare({
               rowDiff,
               colDiff,
-              rowIx: (+rowIx) + rowDiff,
-              colIx: (+colIx) + colDiff,
+              rowIx: rowIx + rowDiff,
+              colIx: colIx + colDiff,
               isOn: sq.cl.indexOf('on') > -1,
             })
           }))
@@ -241,11 +260,75 @@ const mutations = {
     }
   },
 
-  render(state, { board }) {
-    const side = 100 + 2 + 4 // width + border + margin
+  panLeft(state) {
+    state.boardShiftX += sideLength
 
-    let vertBoxes = Math.ceil(board.height / side)
-    let horizBoxes = Math.ceil(board.width / side)
+    if (state.boardShiftX > 0) {
+      /**
+       * There's black space to the left of the board.
+       * Fix this by adding a new column.
+       */
+      state.boardShiftX -= sideLength
+      state.boardWidth += sideLength
+
+      state.squares.forEach((row) => {
+        row.splice(0, 0, {})
+      })
+    }
+  },
+
+  panRight(state) {
+    state.boardShiftX -= sideLength
+
+    if (state.boardWidth + state.boardShiftX - state.board.width < 0) {
+      /**
+       * Client rectangle is larger than visible viewport area.
+       * Add a column.
+       */
+      state.boardWidth += sideLength
+
+      state.squares.forEach((row) => {
+        row.push({})
+      })
+    }
+  },
+
+  panUp(state) {
+    state.boardShiftY += sideLength
+
+    if (state.boardShiftY > 0) {
+      /**
+       * There's black space to the left of the board.
+       * Fix this by adding a new column.
+       */
+      state.boardShiftY -= sideLength
+      state.boardHeight += sideLength
+
+      const row = state.squares[0].map(() => ({}))
+      state.squares.splice(0, 0, row)
+    }
+  },
+
+  panDown(state) {
+    state.boardShiftY -= sideLength
+
+    if (state.boardHeight + state.boardShiftY - state.board.height < 0) {
+      /**
+       * Client rectangle is larger than visible viewport area.
+       * Add a column.
+       */
+      state.boardHeight += sideLength
+
+      const row = state.squares[0].map(() => ({}))
+      state.squares.push(row)
+    }
+  },
+
+  render(state, { board }) {
+    state.board = board
+
+    let vertBoxes = Math.ceil(board.height / sideLength)
+    let horizBoxes = Math.ceil(board.width / sideLength)
     /**
      * Make # boxes in each direction odd
      * so there can be a centered box in the middle.
@@ -253,20 +336,23 @@ const mutations = {
     vertBoxes = vertBoxes + ((vertBoxes + 1) % 2)
     horizBoxes = horizBoxes + ((horizBoxes + 1) % 2)
 
+    const level = levels[state.currentLevel]
+
     const squares = []
     for (let row = 0; row < vertBoxes; ++row) {
       squares[row] = []
       for (let col = 0; col < horizBoxes; ++col) {
         // TODO this is temporary
-        const isBlank = !levels[state.currentLevel][row]
-        squares[row][col] = isBlank ? {} : (levels[0][row][col] || {})
+        const isBlank = !level.squares[row]
+        squares[row][col] = isBlank ? {} : (level.squares[row][col] || {})
       }
     }
 
     state.squares = squares
+    state.tools = level.tools
 
-    state.boardHeight = vertBoxes * side
-    state.boardWidth = horizBoxes * side
+    state.boardHeight = vertBoxes * sideLength
+    state.boardWidth = horizBoxes * sideLength
 
     const extraX = state.boardWidth - board.width
     const extraY = state.boardHeight - board.height
@@ -369,6 +455,10 @@ const actions = {
     }
 
     commit('evaluateBoard')
+  },
+
+  pan({ commit }, direction) {
+    commit(`pan${direction}`)
   },
 }
 
