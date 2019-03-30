@@ -95,7 +95,7 @@ body {
         text-align: center;
         width: 120px;
         height: calc(100vh - 100px);
-        overflow-y: scroll;
+        overflow-y: auto;
         overflow-x: hidden;
 
         .square {

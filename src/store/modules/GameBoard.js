@@ -10,8 +10,15 @@ const levels = [
       2: {
         1: { cl: 'grn-btn-off' },
       },
+      3: {
+        1: { cl: 'grn-btn-off' },
+      },
       4: {
+        1: { cl: 'grn-btn-off' },
         9: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
+      },
+      5: {
+        1: { cl: 'grn-btn-off' },
       },
       6: {
         1: { cl: 'grn-btn-off' },
@@ -226,7 +233,7 @@ const mutations = {
       const lastState = isOn ? 'off' : 'on'
       const currentState = isOn ? 'on' : 'off'
 
-      const delay = async () => new Promise(resolve => setTimeout(resolve, 30))
+      const delay = async () => new Promise(resolve => setTimeout(resolve, 20))
 
       if (sq.cl.indexOf('wire-nsew') > -1) {
         /**
@@ -476,6 +483,10 @@ const actions = {
   },
 
   mouseDown({ commit }, { rowIx, colIx }) {
+    let sq = state.squares[rowIx][colIx]
+    if (sq.cl && sq.cl.indexOf('btn') > -1) {
+      return
+    }
     /**
      * Don't let wires be drawn that aren't connected to anything.
      *
@@ -486,7 +497,7 @@ const actions = {
     [[0,-1],[0,1],[-1,0],[1,0]].forEach(([rowDiff, colDiff]) => {
       let aligns = false
 
-      const sq = state.squares[rowIx + rowDiff][colIx + colDiff]
+      sq = state.squares[rowIx + rowDiff][colIx + colDiff]
 
       if (sq.cl && sq.cl.indexOf('btn') > -1) {
         aligns = true
