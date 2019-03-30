@@ -14,6 +14,7 @@ const state = {
   boardShiftX: 0,
   boardShiftY: 0,
   boardWidth: 0,
+  currentLevel: 0,
   isLoading: true,
   mousePath: null,
   squares: [],
@@ -34,22 +35,22 @@ const mutations = {
    */
   appendMousePath(state, { rowIx, colIx }) {
     const connection = {
-      first: 'e',
-      second: 'w',
+      first: { rowDiff: 0, colDiff: -1 },
+      second: { rowDiff: 0, colDiff: 1 },
     }
 
     const getCl = ({ first, second }) => {
       let cl = ''
-      if (first === 'n' || second === 'n') {
+      if (first.rowDiff < 0 || second.rowDiff < 0) {
         cl = `${cl}n`
       }
-      if (first === 's' || second === 's') {
+      if (first.rowDiff > 0 || second.rowDiff > 0) {
         cl = `${cl}s`
       }
-      if (first === 'e' || second === 'e') {
+      if (first.colDiff > 0 || second.colDiff > 0) {
         cl = `${cl}e`
       }
-      if (first === 'w' || second === 'w') {
+      if (first.colDiff < 0 || second.colDiff < 0) {
         cl = `${cl}w`
       }
       if (cl === 'e' || cl === 'w') {
@@ -57,13 +58,9 @@ const mutations = {
       } else if (cl === 'n' || cl === 's') {
         cl = 'ns'
       }
-      return `wire-${cl}`
+      return `wire-${cl}-off`
     }
 
-    /**
-     * TODO modify last connector and current one
-     * so that the align.
-     */
     const stackLength = state.mousePath.stack.length
 
     if (stackLength) {
@@ -78,43 +75,96 @@ const mutations = {
        * Assume either rowIx or colIx changed by 1.
        * This should be enforced by calling function.
        */
-      const map = {
-        '-1': { 0: 'n' },
-        '1': { 0: 's' },
-        '0': {
-          '-1': 'w',
-          '1': 'e',
-        },
+
+      lastSq.conn.second = {
+        rowDiff: rowIx - lastRowIx,
+        colDiff: colIx - lastColIx,
       }
 
-      lastSq.connection.second = map[rowIx - lastRowIx][colIx - lastColIx]
-
       Object.assign(connection, {
-        first: map[lastRowIx - rowIx][lastColIx - colIx],
-        second: lastSq.connection.second,
+        first: {
+          rowDiff: lastRowIx - rowIx,
+          colDiff: lastColIx - colIx,
+        },
+        /**
+         * Assume continuation of same direction for now.
+         */
+        second: Object.assign({}, lastSq.conn.second),
       })
 
-      if (lastSq.cl !== 'wire-nsew') {
-        lastSq.cl = getCl(lastSq.connection)
+      if (lastSq.cl !== 'wire-nsew-off') {
+        lastSq.cl = getCl(lastSq.conn)
       }
     }
 
     const sq = state.squares[rowIx][colIx]
     const cl = getCl(connection)
 
-    if ((sq.cl === 'wire-ew' && cl === 'wire-ns')
-      || (sq.cl === 'wire-ns' && cl === 'wire-ew')) {
-      sq.cl = 'wire-nsew'
-    } else if (!sq.cl) {
+    if (!sq.cl) {
       Vue.set(state.squares[rowIx], colIx, {
         cl,
-        connection,
+        conn: connection,
         tmp: true,
       })
+    } else if ((sq.cl.indexOf('wire-ew') > -1 && cl.indexOf('wire-ns') > -1)
+      || (sq.cl.indexOf('wire-ns') > -1 && cl.indexOf('wire-ew') > -1)) {
+      sq.cl = 'wire-nsew-off'
     }
 
     state.mousePath.end = { rowIx, colIx }
     state.mousePath.stack.push(state.mousePath.end)
+  },
+
+  evaluateBoard(state) {
+    const evaluateSquare = ({
+      rowDiff,
+      colDiff,
+      rowIx,
+      colIx,
+      isOn,
+    }) => {
+      const sq = state.squares[rowIx][colIx]
+
+      if (!sq.cl) {
+        return
+      }
+
+      const lastState = isOn ? 'off' : 'on'
+      const currentState = isOn ? 'on' : 'off'
+
+      if (sq.cl.indexOf('wire') > -1) {
+        if (-rowDiff === sq.conn.first.rowDiff && -colDiff === sq.conn.first.colDiff) {
+          sq.cl = sq.cl.replace(lastState, currentState)
+
+          evaluateSquare({
+            lastRowIx: rowIx,
+            lastColIx: colIx,
+            rowIx: rowIx + sq.conn.second.rowDiff,
+            colIx: colIx + sq.conn.second.colDiff,
+            isOn,
+          })
+        }
+      }
+    }
+
+    const level = levels[state.currentLevel]
+
+    Object.keys(level).forEach((rowIx) => {
+      Object.keys(level[rowIx]).forEach((colIx) => {
+        const sq = state.squares[rowIx][colIx]
+        if (sq.cl.indexOf('btn') > -1) {
+          // power button
+          // send power right
+          evaluateSquare({
+            rowDiff: 0,
+            colDiff: 1,
+            rowIx: (+rowIx),
+            colIx: (+colIx) + 1,
+            isOn: sq.cl.indexOf('on') > -1,
+          })
+        }
+      })
+    })
   },
 
   finalizeMousePath(state) {
@@ -122,7 +172,7 @@ const mutations = {
      * Clean last path
      */
     state.squares.forEach((row) => {
-      row.forEach((square, colIx) => {
+      row.forEach((square) => {
         if (square.tmp) {
           square.tmp = false
           // Vue.set(row, colIx, {})
@@ -158,7 +208,7 @@ const mutations = {
       squares[row] = []
       for (let col = 0; col < horizBoxes; ++col) {
         // TODO this is temporary
-        const isBlank = !levels[0][row]
+        const isBlank = !levels[state.currentLevel][row]
         squares[row][col] = isBlank ? {} : (levels[0][row][col] || {})
       }
     }
@@ -173,6 +223,16 @@ const mutations = {
 
     state.boardShiftX = -(extraX / 2)
     state.boardShiftY = -(extraY / 2)
+  },
+
+  togglePower(state, { rowIx, colIx }) {
+    const sq = state.squares[rowIx][colIx]
+
+    if (sq.cl.indexOf('off') > -1) {
+      sq.cl = sq.cl.replace('off', 'on')
+    } else {
+      sq.cl = sq.cl.replace('on', 'off')
+    }
   },
 }
 
@@ -221,22 +281,17 @@ const actions = {
     if (state.mousePath) {
       const { rowIx: rowSx, colIx: colSx } = state.mousePath.start
       const { rowIx: rowEx, colIx: colEx } = state.mousePath.end
-      if (rowSx === rowEx && colSx === colEx) {
-        // clicked one square
-        const sq = state.squares[rowSx][colSx]
-        if (sq.cl.indexOf('btn') > -1) {
-          // power button click
-          if (sq.cl.indexOf('off') > -1) {
-            sq.cl = sq.cl.replace('off', 'on')
-          } else {
-            sq.cl = sq.cl.replace('on', 'off')
-          }
-        }
+      if (rowSx === rowEx && colSx === colEx
+        && state.squares[rowSx][colSx].cl.indexOf('btn') > -1) {
+        // power button click
+        commit('togglePower', { rowIx: rowSx, colIx: colSx })
         state.mousePath = null
       } else {
         commit('finalizeMousePath')
       }
     }
+
+    commit('evaluateBoard')
   },
 }
 
