@@ -75,12 +75,41 @@ const mutations = {
    * Don't overwrite permanent fixtures.
    * Cross over existing paths where applicable.
    * Needs to take into account input/output directions.
+   *
+   * Assume either rowIx or colIx changed by 1.
+   * This should be enforced by calling function.
    */
   appendMousePath(state, { rowIx, colIx, conn }) {
     const sq = state.squares[rowIx][colIx]
 
-    if (sq.cl && sq.cl.indexOf('wire') < 0) {
-      // This method is only for wires.
+    const canDraw = () => {
+      if (sq.cl) {
+        /**
+         * Since something already exists in this square,
+         * this method is only allowed to proceed if it's trying
+         * to draw a cross-wire.
+         */
+        if (sq.cl.indexOf('wire-ew-') > -1
+          && conn.first.colDiff === 0 && conn.second.colDiff === 0) {
+          // is horizontal and trying to cross vertically
+        } else if (sq.cl.indexOf('wire-ns-') > -1
+          && conn.first.rowDiff === 0 && conn.second.rowDiff === 0) {
+          // is vertical and trying to cross horizontally
+        } else {
+          return false
+        }
+      }
+
+      return true
+    }
+
+    /**
+     * `conn` is initialized by calling method for the
+     * first square in the path.
+     * After that, it's initialized below using the
+     * previous square in the path.
+     */
+    if (conn.second && !canDraw()) {
       return
     }
 
@@ -116,29 +145,36 @@ const mutations = {
 
       const lastSq = state.squares[lastRowIx][lastColIx]
 
-      /**
-       * Assume either rowIx or colIx changed by 1.
-       * This should be enforced by calling function.
-       */
-
-      lastSq.conn.second = {
-        rowDiff: rowIx - lastRowIx,
-        colDiff: colIx - lastColIx,
-      }
-
       Object.assign(conn, {
         first: {
           rowDiff: lastRowIx - rowIx,
           colDiff: lastColIx - colIx,
         },
         // deep copy `lastSq.conn.second`
-        second: findSecond({ rowIx, colIx }) || Object.assign({}, lastSq.conn.second),
+        second: findSecond({ rowIx, colIx }) || {
+          rowDiff: rowIx - lastRowIx,
+          colDiff: colIx - lastColIx,
+        },
       })
+
+      /**
+       * Now `conn` is initialized, so we
+       * can check `canDraw`.
+       */
+      if (!canDraw()) {
+        return
+      }
 
       /**
        * Don't automatically update wire type for a cross piece.
        */
       if (lastSq.cl.indexOf('wire-nsew') < 0) {
+        // not a cross-wire
+        lastSq.conn.second = {
+          rowDiff: rowIx - lastRowIx,
+          colDiff: colIx - lastColIx,
+        }
+
         lastSq.cl = getCl(lastSq.conn)
       }
     }
@@ -155,9 +191,16 @@ const mutations = {
         conn,
         tmp: true,
       })
-    } else if ((sq.cl.indexOf('wire-ew') > -1 && cl.indexOf('wire-ns') > -1)
-      || (sq.cl.indexOf('wire-ns') > -1 && cl.indexOf('wire-ew') > -1)) {
-      sq.cl = 'wire-nsew-vert-off-horiz-off'
+    } else if (sq.cl.indexOf('wire-ew') > -1 && cl.indexOf('wire-ns') > -1) {
+      // save cl to revert to
+      sq.tmp = sq.cl
+      const horizOn = sq.cl.indexOf('on') > -1 ? 'on' : 'off'
+      sq.cl = `wire-nsew-vert-off-horiz-${horizOn}`
+    } else if (sq.cl.indexOf('wire-ns') > -1 && cl.indexOf('wire-ew') > -1) {
+      // save cl to revert to
+      sq.tmp = sq.cl
+      const vertOn = sq.cl.indexOf('on') > -1 ? 'on' : 'off'
+      sq.cl = `wire-nsew-vert-${vertOn}-horiz-off`
     }
 
     state.mousePath.end = { rowIx, colIx }
@@ -281,16 +324,26 @@ const mutations = {
 
   finalizeMousePath(state) {
     /**
-     * Clean last path
+     * If path doesn't end at an input, remove it.
+     * Otherwise, set it in place.
      */
-    state.squares.forEach((row) => {
-      row.forEach((square) => {
-        if (square.tmp) {
-          square.tmp = false
-          // Vue.set(row, colIx, {})
+    const doesTerminate = !!findSecond(state.mousePath.end)
+
+    state.mousePath.stack.forEach(({ rowIx, colIx }) => {
+      const sq = state.squares[rowIx][colIx]
+
+      if (doesTerminate) {
+        sq.tmp = false
+      } else {
+        if (sq.tmp !== true) {
+          // cross-wire
+          sq.cl = sq.tmp
+          sq.tmp = false
+        } else {
+          Vue.set(state.squares[rowIx], colIx, {})
         }
-      })
-    })    
+      }
+    })
 
     state.mousePath = null
   },
