@@ -289,7 +289,16 @@ const actions = {
           colIx: lastColIx,
         } = state.mousePath.stack[stackLength - 1]
 
+        /**
+         * Don't allow moves more than 1 square away.
+         * Diagonal squares can be 1 square away.
+         */
+        if (Math.abs(rowIx - lastRowIx) > 1 || Math.abs(colIx - lastColIx) > 1) {
+          return
+        }
+        
         if (rowIx !== lastRowIx && colIx !== lastColIx) {
+          // moved diagonally
           const rowDiff = lastRowIx - rowIx
           const colDiff = lastColIx - colIx
 
