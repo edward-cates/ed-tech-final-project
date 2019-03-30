@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { delay } from 'q';
 
 const levels = [
   {
@@ -97,7 +98,10 @@ const mutations = {
         second: Object.assign({}, lastSq.conn.second),
       })
 
-      if (lastSq.cl !== 'wire-nsew-off') {
+      /**
+       * Don't automatically update wire type for a cross piece.
+       */
+      if (lastSq.cl.indexOf('wire-nsew') < 0) {
         lastSq.cl = getCl(lastSq.conn)
       }
     }
@@ -116,7 +120,7 @@ const mutations = {
       })
     } else if ((sq.cl.indexOf('wire-ew') > -1 && cl.indexOf('wire-ns') > -1)
       || (sq.cl.indexOf('wire-ns') > -1 && cl.indexOf('wire-ew') > -1)) {
-      sq.cl = 'wire-nsew-off'
+      sq.cl = 'wire-nsew-vert-off-horiz-off'
     }
 
     state.mousePath.end = { rowIx, colIx }
@@ -140,9 +144,40 @@ const mutations = {
       const lastState = isOn ? 'off' : 'on'
       const currentState = isOn ? 'on' : 'off'
 
-      if (sq.cl.indexOf('wire') > -1) {
+      const delay = new Promise(resolve => setTimeout(resolve, 10))
+
+      if (sq.cl.indexOf('wire-nsew') > -1) {
+        /**
+         * Did it come vertically or horizontally?
+         */
+        if (rowDiff !== 0) {
+          // vertically
+          await delay
+          sq.cl = sq.cl.replace(`vert-${lastState}`, `vert-${currentState}`)
+
+          evaluateSquare({
+            rowDiff: rowDiff,
+            colDiff: 0,
+            rowIx: rowIx + rowDiff,
+            colIx,
+            isOn,
+          })
+        } else if (colDiff !== 0) {
+          // horizontally
+          await delay
+          sq.cl = sq.cl.replace(`horiz-${lastState}`, `horiz-${currentState}`)
+
+          evaluateSquare({
+            rowDiff: 0,
+            colDiff: colDiff,
+            rowIx,
+            colIx: colIx + colDiff,
+            isOn,
+          })
+        }
+      } else if (sq.cl.indexOf('wire') > -1) {
         if (-rowDiff === sq.conn.first.rowDiff && -colDiff === sq.conn.first.colDiff) {
-          await new Promise(resolve => setTimeout(resolve, 10))
+          await delay
           sq.cl = sq.cl.replace(lastState, currentState)
 
           evaluateSquare({
@@ -296,7 +331,7 @@ const actions = {
         if (Math.abs(rowIx - lastRowIx) > 1 || Math.abs(colIx - lastColIx) > 1) {
           return
         }
-        
+
         if (rowIx !== lastRowIx && colIx !== lastColIx) {
           // moved diagonally
           const rowDiff = lastRowIx - rowIx

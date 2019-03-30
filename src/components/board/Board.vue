@@ -6,6 +6,7 @@
     <div
       class="viewport"
       :style="style"
+      @mouseup="mouseUp"
     >
       <div
         :key="rowIx"
@@ -17,7 +18,6 @@
           :square="sq"
           @mouseDown="mouseDown({ rowIx, colIx })"
           @mouseEnter="mouseEnter({ rowIx, colIx })"
-          @mouseUp="mouseUp({ rowIx, colIx })"
         />
       </div>
     </div>

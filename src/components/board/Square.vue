@@ -3,7 +3,6 @@
     class="square"
     @mousedown="mouseDown"
     @mouseenter="$emit('mouseEnter')"
-    @mouseup="mouseUp"
   >
     <!-- buttons -->
     <img v-if="square.cl === 'grn-btn-off'" src="@/assets/img/grn-btn/off/nsew.svg" />
@@ -20,7 +19,6 @@
     <img v-else-if="square.cl === 'wire-se-off'" src="@/assets/img/wire/off/se.svg" />
     <img v-else-if="square.cl === 'wire-sw-off'" src="@/assets/img/wire/off/sw.svg" />
     <img v-else-if="square.cl === 'wire-ew-off'" src="@/assets/img/wire/off/ew.svg" />
-    <img v-else-if="square.cl === 'wire-nsew-off'" src="@/assets/img/wire/off/nsew.svg" />
     <!---- on ---->
     <img v-else-if="square.cl === 'wire-ne-on'" src="@/assets/img/wire/on/ne.svg" />
     <img v-else-if="square.cl === 'wire-ns-on'" src="@/assets/img/wire/on/ns.svg" />
@@ -28,7 +26,11 @@
     <img v-else-if="square.cl === 'wire-se-on'" src="@/assets/img/wire/on/se.svg" />
     <img v-else-if="square.cl === 'wire-sw-on'" src="@/assets/img/wire/on/sw.svg" />
     <img v-else-if="square.cl === 'wire-ew-on'" src="@/assets/img/wire/on/ew.svg" />
-    <!-- <img v-else-if="square.cl === 'wire-nsew-on'" src="@/assets/img/wire/on/nsew.svg" /> -->
+    <!---- cross ---->
+    <img v-else-if="square.cl === 'wire-nsew-vert-off-horiz-off'" src="@/assets/img/wire/off/nsew.svg" />
+    <img v-else-if="square.cl === 'wire-nsew-vert-off-horiz-on'" src="@/assets/img/wire/on/nsew-horiz.svg" />
+    <img v-else-if="square.cl === 'wire-nsew-vert-on-horiz-off'" src="@/assets/img/wire/on/nsew-vert.svg" />
+    <img v-else-if="square.cl === 'wire-nsew-vert-on-horiz-on'" src="@/assets/img/wire/on/nsew-both.svg" />
 
     <!-- blank -->
     <img v-else src="@/assets/img/blank-square.svg" style="visibility: hidden" />
@@ -47,10 +49,6 @@ export default {
       $ev.preventDefault()
       this.$emit('mouseDown')
     },
-    mouseUp($ev) {
-      $ev.preventDefault()
-      this.$emit('mouseUp')
-    }
   },
 }
 </script>
