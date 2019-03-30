@@ -8,17 +8,17 @@ const levels = [
   {
     squares: {
       2: {
-        1: { cl: 'grn-btn-off' },
-        9: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
+        1: { cl: 'pnk-btn-off' },
+        // 9: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
       },
       4: {
         1: { cl: 'grn-btn-off' },
         9: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
       },
-      6: {
-        1: { cl: 'grn-btn-off' },
-        9: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
-      },
+      // 6: {
+      //   1: { cl: 'grn-btn-off' },
+      //   9: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
+      // },
     },
     tools: [
       GATE.SPLIT,
@@ -27,8 +27,10 @@ const levels = [
       GATE.AND,
     ],
     objective: [
-      ['ball green-on', 'bulb orange-off'],
-      ['ball green-off', 'bulb orange-on'],
+      ['ball pink-off', 'ball green-off', 'bulb orange-off'],
+      ['ball pink-off', 'ball green-on', 'bulb orange-off'],
+      ['ball pink-on', 'ball green-off', 'bulb orange-off'],
+      ['ball pink-on', 'ball green-on', 'bulb orange-on'],
     ],
   },
 ]
@@ -218,6 +220,9 @@ const mutations = {
     state.mousePath.stack.push(state.mousePath.end)
   },
 
+  /**
+   * TODO Check solutions while evaluating board.
+   */
   async evaluateBoard(state) {
     const evaluateSquare = async ({
       rowDiff,
@@ -317,6 +322,7 @@ const mutations = {
               isOn: sq.cl.indexOf('on') > -1,
             })
           }))
+          // TODO check solution
         } else if (sq.cl && sq.cl.indexOf('gate') > -1) {
           // gate
           await Promise.all(sq.outputs.map(async ({ rowDiff, colDiff, isOn }) => {

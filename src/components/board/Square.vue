@@ -7,8 +7,12 @@
     @mouseup.stop="$emit('mouseUp')"
   >
     <!-- buttons -->
+    <!---- green ---->
     <img v-if="square.cl === 'grn-btn-off'" src="@/assets/img/grn-btn/off/nsew.svg" />
     <img v-else-if="square.cl === 'grn-btn-on'" src="@/assets/img/grn-btn/on/nsew.svg" />
+    <!---- pink ---->
+    <img v-else-if="square.cl === 'pnk-btn-off'" src="@/assets/img/pnk-btn/off/nsew.svg" />
+    <img v-else-if="square.cl === 'pnk-btn-on'" src="@/assets/img/pnk-btn/on/nsew.svg" />
 
     <!-- lights -->
     <!---- off ---->
