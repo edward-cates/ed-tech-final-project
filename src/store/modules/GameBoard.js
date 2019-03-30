@@ -9,24 +9,18 @@ const levels = [
     squares: {
       2: {
         1: { cl: 'grn-btn-off' },
-      },
-      3: {
-        1: { cl: 'grn-btn-off' },
-      },
-      4: {
-        1: { cl: 'grn-btn-off' },
         9: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
-      },
-      5: {
-        1: { cl: 'grn-btn-off' },
       },
       6: {
         1: { cl: 'grn-btn-off' },
+        9: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
       },
     },
     tools: [
+      GATE.SPLIT,
       GATE.NOT,
       GATE.OR,
+      GATE.AND,
     ],
   },
 ]

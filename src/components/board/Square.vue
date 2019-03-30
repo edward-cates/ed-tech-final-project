@@ -38,6 +38,9 @@
     <img v-else-if="square.cl === 'wire-nsew-vert-on-horiz-on'" src="@/assets/img/wire/on/nsew-both.svg" />
 
     <!-- gates -->
+    <!---- split ---->
+    <img v-else-if="square.cl === 'split-gate-0'" src="@/assets/img/split-gate/0.png" />
+    <img v-else-if="square.cl === 'split-gate-1'" src="@/assets/img/split-gate/1.png" />
     <!---- not ---->
     <img v-else-if="square.cl === 'not-gate-0'" src="@/assets/img/not-gate/0.png" />
     <img v-else-if="square.cl === 'not-gate-1'" src="@/assets/img/not-gate/1.png" />
@@ -50,6 +53,15 @@
     <img v-else-if="square.cl === 'or-gate-101'" src="@/assets/img/or-gate/101.png" />
     <img v-else-if="square.cl === 'or-gate-110'" src="@/assets/img/or-gate/110.png" />
     <img v-else-if="square.cl === 'or-gate-111'" src="@/assets/img/or-gate/111.png" />
+    <!---- and ---->
+    <img v-else-if="square.cl === 'and-gate-000'" src="@/assets/img/and-gate/000.png" />
+    <img v-else-if="square.cl === 'and-gate-001'" src="@/assets/img/and-gate/001.png" />
+    <img v-else-if="square.cl === 'and-gate-010'" src="@/assets/img/and-gate/010.png" />
+    <img v-else-if="square.cl === 'and-gate-011'" src="@/assets/img/and-gate/011.png" />
+    <img v-else-if="square.cl === 'and-gate-100'" src="@/assets/img/and-gate/100.png" />
+    <img v-else-if="square.cl === 'and-gate-101'" src="@/assets/img/and-gate/101.png" />
+    <img v-else-if="square.cl === 'and-gate-110'" src="@/assets/img/and-gate/110.png" />
+    <img v-else-if="square.cl === 'and-gate-111'" src="@/assets/img/and-gate/111.png" />
 
     <!-- blank -->
     <img v-else src="@/assets/img/blank-square.svg" style="visibility: hidden" />
