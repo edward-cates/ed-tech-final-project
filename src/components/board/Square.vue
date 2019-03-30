@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="clss"
+    class="square"
     @mousedown="mouseDown"
     @mouseenter="$emit('mouseEnter')"
     @mouseup="mouseUp"
@@ -39,20 +39,8 @@
 export default {
   name: 'Square',
   props: {
-    isCenter: {
-      type: Boolean,
-      required: true,
-    },
     label: {},
     square: {},
-  },
-  computed: {
-    clss() {
-      if (this.isCenter) {
-        return 'square square-center'
-      }
-      return 'square'
-    },
   },
   methods: {
     mouseDown($ev) {

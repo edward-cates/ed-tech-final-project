@@ -14,7 +14,6 @@
         <square
           :key="colIx"
           v-for="(sq, colIx) in row"
-          :is-center="isCenterSquare({ rowIx, colIx })"
           :square="sq"
           @mouseDown="mouseDown({ rowIx, colIx })"
           @mouseEnter="mouseEnter({ rowIx, colIx })"
@@ -66,10 +65,6 @@ export default {
       'mouseEnter',
       'mouseUp',
     ]),
-    isCenterSquare({ rowIx, colIx }) {
-      return rowIx === Math.floor(this.squares.length / 2)
-        && colIx === Math.floor(this.squares[rowIx].length / 2)
-    },
   },
 }
 </script>

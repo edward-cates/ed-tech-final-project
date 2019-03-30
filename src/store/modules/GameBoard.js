@@ -6,6 +6,9 @@ const levels = [
       3: { cl: 'grn-btn-off' },
       7: { cl: 'org-lgt' },
     },
+    4: {
+      1: { cl: 'grn-btn-off' },
+    },
   },
 ]
 
@@ -33,14 +36,13 @@ const mutations = {
    * Cross over existing paths where applicable.
    * Needs to take into account input/output directions.
    */
-  appendMousePath(state, { rowIx, colIx }) {
-    /**
-     * For the first wire, we need some logic
-     * to pick the best first wire.
-     * For the rest, the direction will be updated
-     * based on the previous wire segment.
-     */
-    const connection = {}
+  appendMousePath(state, { rowIx, colIx, conn }) {
+    const sq = state.squares[rowIx][colIx]
+
+    if (sq.cl && sq.cl.indexOf('wire') < 0) {
+      // This method is only for wires.
+      return
+    }
 
     const getCl = ({ first, second }) => {
       let cl = ''
@@ -84,7 +86,7 @@ const mutations = {
         colDiff: colIx - lastColIx,
       }
 
-      Object.assign(connection, {
+      Object.assign(conn, {
         first: {
           rowDiff: lastRowIx - rowIx,
           colDiff: lastColIx - colIx,
@@ -98,31 +100,18 @@ const mutations = {
       if (lastSq.cl !== 'wire-nsew-off') {
         lastSq.cl = getCl(lastSq.conn)
       }
-    } else {
-      /**
-       * Need to figured out initial values for `connection` here.
-       * Look for nearby buttons and lights, and try to optimize
-       * connections to those.
-       */
-      for (let rowDiff = -1; !connection.second && rowDiff <= 1; ++rowDiff) {
-        for (let colDiff = -1; !connection.second && colDiff <= 1; ++colDiff) {
-          const sq = state.squares[rowIx + rowDiff][colIx + colDiff]
-          if (sq.cl && sq.cl.indexOf('btn') > -1) {
-            connection.first = { rowDiff, colDiff }
-            // assume straight line
-            connection.second = { rowDiff: -rowDiff, colDiff: -colDiff }
-          }
-        }
-      }
     }
 
-    const sq = state.squares[rowIx][colIx]
-    const cl = getCl(connection)
+    /**
+     * wait until now to get `cl` because `conn` could
+     * be modified after looking at the last segment.
+     */
+    const cl = getCl(conn)
 
     if (!sq.cl) {
       Vue.set(state.squares[rowIx], colIx, {
         cl,
-        conn: connection,
+        conn,
         tmp: true,
       })
     } else if ((sq.cl.indexOf('wire-ew') > -1 && cl.indexOf('wire-ns') > -1)
@@ -174,19 +163,15 @@ const mutations = {
         const sq = state.squares[rowIx][colIx]
         if (sq.cl.indexOf('btn') > -1) {
           // power button
-          for (let rowDiff = -1; rowDiff <= 1; ++rowDiff) {
-            for (let colDiff = -1; colDiff <= 1; ++colDiff) {
-              if (rowDiff !== 0 || colDiff !== 0) {
-                await evaluateSquare({
-                  rowDiff,
-                  colDiff,
-                  rowIx: (+rowIx) + rowDiff,
-                  colIx: (+colIx) + colDiff,
-                  isOn: sq.cl.indexOf('on') > -1,
-                })
-              }
-            }
-          }
+          await Promise.all([[0,-1],[0,1],[-1,0],[1,0]].map(async ([rowDiff, colDiff]) => {
+            await evaluateSquare({
+              rowDiff,
+              colDiff,
+              rowIx: (+rowIx) + rowDiff,
+              colIx: (+colIx) + colDiff,
+              isOn: sq.cl.indexOf('on') > -1,
+            })
+          }))
         }
       }))
     }))
@@ -211,7 +196,7 @@ const mutations = {
   initializeMousePath(state, { rowIx, colIx }) {
     state.mousePath = {
       start: { rowIx, colIx },
-      end: null,
+      end: { rowIx, colIx },
       stack: [],
     }
   },
@@ -267,8 +252,28 @@ const actions = {
   },
 
   mouseDown({ commit }, { rowIx, colIx }) {
-    commit('initializeMousePath', { rowIx, colIx })
-    commit('appendMousePath', { rowIx, colIx })
+    /**
+     * Don't let wires be drawn that aren't connected to anything.
+     *
+     * Need to figured out initial values for wire direction here.
+     * Look for nearby buttons and lights, and try to optimize
+     * connections to those.
+     */
+    [[0,0],[0,-1],[0,1],[-1,0],[1,0]].forEach(([rowDiff, colDiff]) => {
+      const sq = state.squares[rowIx + rowDiff][colIx + colDiff]
+      if (sq.cl && sq.cl.indexOf('btn') > -1) {
+        commit('initializeMousePath', { rowIx, colIx })
+        commit('appendMousePath', {
+          rowIx,
+          colIx,
+          conn: {
+            first: { rowDiff, colDiff },
+            // assume straight line
+            second: { rowDiff: -rowDiff, colDiff: -colDiff },
+          },
+        })
+      }
+    })
   },
 
   mouseEnter({ state, commit }, { rowIx, colIx }) {
@@ -289,16 +294,16 @@ const actions = {
           const colDiff = lastColIx - colIx
 
           if (!state.squares[rowIx][colIx + colDiff].cl) {
-            commit('appendMousePath', { rowIx, colIx: colIx + colDiff })
+            commit('appendMousePath', { rowIx, colIx: colIx + colDiff, conn: {} })
           } else if (!state.squares[rowIx + rowDiff][colIx].cl) {
-            commit('appendMousePath', { rowIx: rowIx + rowDiff, colIx })
+            commit('appendMousePath', { rowIx: rowIx + rowDiff, colIx, conn: {} })
           } else {
             // TODO termination condition
           }
         }
       }
 
-      commit('appendMousePath', { rowIx, colIx })
+      commit('appendMousePath', { rowIx, colIx, conn: {} })
     }
   },
 
