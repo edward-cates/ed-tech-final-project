@@ -40,6 +40,34 @@ const getters = {
   //
 }
 
+/**
+ * Look for an input and return the respective
+ * { rowDiff, colDiff } object.
+ */
+function findSecond({ rowIx, colIx }) {
+  const diffs = [[0,-1],[0,1],[-1,0],[1,0]].find(([rowDiff, colDiff]) => {
+    const sq = state.squares[rowIx + rowDiff][colIx + colDiff]
+
+    let aligns = false
+
+    if (sq.cl && sq.cl.indexOf('lgt') > -1) {
+      // light
+      aligns = sq.conn.rowDiff === -rowDiff && sq.conn.colDiff === -colDiff
+    } else if (sq.cl && sq.cl.indexOf('gate') > -1) {
+      // gate
+      aligns = sq.inputs.some(({ rowDiff: rd, colDiff: cd }) => rowDiff === -rd && colDiff === -cd)
+    }
+
+    return aligns
+  })
+
+  if (!diffs) {
+    return null
+  }
+
+  return { rowDiff: diffs[0], colDiff: diffs[1] }
+}
+
 const mutations = {
   /**
    * Fill `squares` to draw `mousePath`
@@ -103,10 +131,8 @@ const mutations = {
           rowDiff: lastRowIx - rowIx,
           colDiff: lastColIx - colIx,
         },
-        /**
-         * Assume continuation of same direction for now.
-         */
-        second: Object.assign({}, lastSq.conn.second),
+        // deep copy `lastSq.conn.second`
+        second: findSecond({ rowIx, colIx }) || Object.assign({}, lastSq.conn.second),
       })
 
       /**
@@ -423,8 +449,7 @@ const actions = {
           colIx,
           conn: {
             first: { rowDiff, colDiff },
-            // assume straight line
-            second: { rowDiff: -rowDiff, colDiff: -colDiff },
+            second: findSecond({ rowIx, colIx }) || { rowDiff: -rowDiff, colDiff: -colDiff },
           },
         })
       }
