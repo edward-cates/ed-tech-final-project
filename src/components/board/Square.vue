@@ -1,10 +1,10 @@
 <template>
   <div
     class="square"
-    @mousedown="mouseDown"
+    @mousedown.prevent="$emit('mouseDown')"
     @mouseenter="$emit('mouseEnter')"
     @mouseleave="$emit('mouseLeave')"
-    @mouseup="$emit('mouseUp')"
+    @mouseup.stop="$emit('mouseUp')"
   >
     <!-- buttons -->
     <img v-if="square.cl === 'grn-btn-off'" src="@/assets/img/grn-btn/off/nsew.svg" />
@@ -50,14 +50,7 @@
 export default {
   name: 'Square',
   props: {
-    label: {},
     square: {},
-  },
-  methods: {
-    mouseDown($ev) {
-      $ev.preventDefault()
-      this.$emit('mouseDown')
-    },
   },
 }
 </script>

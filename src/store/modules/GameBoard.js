@@ -17,11 +17,15 @@ const levels = [
       {
         cl: 'not-gate-0',
         inputs: [
-          { rowDiff: 0, colDiff: -1 },
+          { rowDiff: 0, colDiff: -1, isOn: false },
         ],
         outputs: [
-          { rowDiff: 0, colDiff: 1 },
+          { rowDiff: 0, colDiff: 1, isOn: true },
         ],
+        evaluate: function evaluate() {
+          const isOutOn = this.outputs[0].isOn = !this.inputs[0].isOn
+          this.cl = `not-gate-${isOutOn ? '0' : '1'}`
+        },
       },
     ],
   },
@@ -171,8 +175,8 @@ const mutations = {
           await delay
           sq.cl = sq.cl.replace(`vert-${lastState}`, `vert-${currentState}`)
 
-          evaluateSquare({
-            rowDiff: rowDiff,
+          await evaluateSquare({
+            rowDiff,
             colDiff: 0,
             rowIx: rowIx + rowDiff,
             colIx,
@@ -183,9 +187,9 @@ const mutations = {
           await delay()
           sq.cl = sq.cl.replace(`horiz-${lastState}`, `horiz-${currentState}`)
 
-          evaluateSquare({
+          await evaluateSquare({
             rowDiff: 0,
-            colDiff: colDiff,
+            colDiff,
             rowIx,
             colIx: colIx + colDiff,
             isOn,
@@ -196,7 +200,7 @@ const mutations = {
           await delay()
           sq.cl = sq.cl.replace(lastState, currentState)
 
-          evaluateSquare({
+          await evaluateSquare({
             rowDiff: sq.conn.second.rowDiff,
             colDiff: sq.conn.second.colDiff,
             rowIx: rowIx + sq.conn.second.rowDiff,
@@ -209,6 +213,22 @@ const mutations = {
         if (-rowDiff === sq.conn.rowDiff && -colDiff === sq.conn.colDiff) {
           await delay()
           sq.cl = sq.cl.replace(lastState, currentState)
+        }
+      } else if (sq.cl.indexOf('gate') > -1) {
+        // gate
+        const input = sq.inputs.find(({ rowDiff: rd, colDiff: cd }) => rowDiff === -rd && colDiff === -cd)
+        if (input) {
+          input.isOn = isOn
+          // update outputs
+          sq.evaluate()
+
+          await Promise.all(sq.outputs.map(async (out) => evaluateSquare({
+            rowDiff: out.rowDiff,
+            colDiff: out.colDiff,
+            rowIx: rowIx + out.rowDiff,
+            colIx: colIx + out.colDiff,
+            isOn: console.log(out.isOn) || out.isOn,
+          })))
         }
       }
     }
@@ -224,6 +244,17 @@ const mutations = {
               rowIx: rowIx + rowDiff,
               colIx: colIx + colDiff,
               isOn: sq.cl.indexOf('on') > -1,
+            })
+          }))
+        } else if (sq.cl && sq.cl.indexOf('gate') > -1) {
+          // gate
+          await Promise.all(sq.outputs.map(async ({ rowDiff, colDiff, isOn }) => {
+            await evaluateSquare({
+              rowDiff,
+              colDiff,
+              rowIx: rowIx + rowDiff,
+              colIx: colIx + colDiff,
+              isOn,
             })
           }))
         }
