@@ -9,7 +9,10 @@
     <img v-else-if="square.cl === 'grn-btn-on'" src="@/assets/img/grn-btn/on/nsew.svg" />
 
     <!-- lights -->
-    <img v-else-if="square.cl === 'org-lgt'" src="@/assets/img/org-lgt/on/w.svg" />
+    <!---- off ---->
+    <img v-else-if="square.cl === 'org-lgt-w-off'" src="@/assets/img/org-lgt/off/w.svg" />
+    <!---- on ---->
+    <img v-else-if="square.cl === 'org-lgt-w-on'" src="@/assets/img/org-lgt/on/w.svg" />
 
     <!-- wires -->
     <!---- off ---->

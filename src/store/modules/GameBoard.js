@@ -1,11 +1,10 @@
 import Vue from 'vue'
-import { delay } from 'q';
 
 const levels = [
   {
     2: {
       3: { cl: 'grn-btn-off' },
-      7: { cl: 'org-lgt' },
+      7: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
     },
     4: {
       1: { cl: 'grn-btn-off' },
@@ -144,7 +143,7 @@ const mutations = {
       const lastState = isOn ? 'off' : 'on'
       const currentState = isOn ? 'on' : 'off'
 
-      const delay = new Promise(resolve => setTimeout(resolve, 10))
+      const delay = async () => new Promise(resolve => setTimeout(resolve, 10))
 
       if (sq.cl.indexOf('wire-nsew') > -1) {
         /**
@@ -164,7 +163,7 @@ const mutations = {
           })
         } else if (colDiff !== 0) {
           // horizontally
-          await delay
+          await delay()
           sq.cl = sq.cl.replace(`horiz-${lastState}`, `horiz-${currentState}`)
 
           evaluateSquare({
@@ -177,7 +176,7 @@ const mutations = {
         }
       } else if (sq.cl.indexOf('wire') > -1) {
         if (-rowDiff === sq.conn.first.rowDiff && -colDiff === sq.conn.first.colDiff) {
-          await delay
+          await delay()
           sq.cl = sq.cl.replace(lastState, currentState)
 
           evaluateSquare({
@@ -187,6 +186,12 @@ const mutations = {
             colIx: colIx + sq.conn.second.colDiff,
             isOn,
           })
+        }
+      } else if (sq.cl.indexOf('lgt') > -1) {
+        // light
+        if (-rowDiff === sq.conn.rowDiff && -colDiff === sq.conn.colDiff) {
+          await delay()
+          sq.cl = sq.cl.replace(lastState, currentState)
         }
       }
     }
