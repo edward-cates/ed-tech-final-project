@@ -24,13 +24,25 @@
     </div>
 
     <div class="menu">
-      <div class="menu-bar">
+      <div
+        class="menu-bar"
+        @click="isToolboxOpen = !isToolboxOpen"
+      >
         Toolbox
-        <img src="@/assets/img/caret-down.svg" />
+        <img v-if="!isToolboxOpen" src="@/assets/img/caret-down.svg" />
+        <img v-else src="@/assets/img/caret-up.svg" />
+
+        <div v-if="isToolboxOpen" class="dropdown toolbox">
+        </div>
       </div>
 
       <div class="menu-bar">
         Objective
+        <img src="@/assets/img/caret-down.svg" />
+      </div>
+
+      <div class="menu-bar">
+        Controls
         <img src="@/assets/img/caret-down.svg" />
       </div>
     </div>
@@ -46,6 +58,11 @@ export default {
   name: 'Board',
   components: {
     Square,
+  },
+  data() {
+    return {
+      isToolboxOpen: false,
+    }
   },
   computed: {
     ...mapState('GameBoard', [

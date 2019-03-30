@@ -1,6 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto);
 
 $charged: #54B7B7;
+$menu: #464646;
 $pan-width: 40px;
 
 body {
@@ -55,12 +56,12 @@ body {
       .menu-bar {
         position: relative;
         display: inline-block;
-        background-color: #464646;
+        background-color: $menu;
         width: 120px;
         height: 20px;
         margin-right: 8px;
         padding: 12px 20px;
-        border: 1px solid #464646;
+        border: 1px solid $menu;
         border-radius: 5px;
 
         &:hover {
@@ -72,6 +73,21 @@ body {
           right: 20px;
           top: 20px;
           width: 10px;
+        }
+
+        .dropdown {
+          position: absolute;
+          background-color: $menu;
+          border: 1px solid $menu;
+          border-radius: 5px;
+          top: 54px;
+          left: 0px;
+          padding: 12px 20px;
+        }
+
+        .toolbox {
+          width: 120px;
+          height: calc(100vh - 100px);
         }
       }
     }
