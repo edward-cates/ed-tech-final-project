@@ -11,6 +11,10 @@ const levels = [
         1: { cl: 'grn-btn-off' },
         9: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
       },
+      4: {
+        1: { cl: 'grn-btn-off' },
+        9: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
+      },
       6: {
         1: { cl: 'grn-btn-off' },
         9: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
