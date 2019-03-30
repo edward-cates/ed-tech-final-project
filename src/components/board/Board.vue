@@ -42,9 +42,32 @@
         />
       </div>
 
-      <div class="menu-bar">
+      <div
+        class="menu-bar"
+        @click="isObjectiveOpen = !isObjectiveOpen"
+      >
         Objective
-        <img class="icon" src="@/assets/img/caret-down.svg" />
+        <img class="icon" v-if="!isObjectiveOpen" src="@/assets/img/caret-down.svg" />
+        <img class="icon" v-else src="@/assets/img/caret-up.svg" />
+      </div>
+      <div v-if="isObjectiveOpen" class="dropdown objective">
+        Level 1 Object: Power
+        <div class="row">
+          <div class="cell">
+            <div class="ball green-on" />
+          </div>
+          <div class="cell">
+            <div class="bulb orange-on" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="cell">
+            <div class="ball green-off" />
+          </div>
+          <div class="cell">
+            <div class="bulb orange-off" />
+          </div>
+        </div>
       </div>
 
       <div class="menu-bar">
@@ -71,6 +94,7 @@ export default {
     return {
       currentSquare: null,
       currentTool: null,
+      isObjectiveOpen: false,
       isToolboxOpen: false,
     }
   },
