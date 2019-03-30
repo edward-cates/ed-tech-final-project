@@ -27,13 +27,13 @@
     <div class="menu">
       <div
         class="menu-bar"
-        @click="isToolboxOpen = !isToolboxOpen"
+        @click="toggleMenuBar('Toolbox')"
       >
         Toolbox
-        <img class="icon" v-if="!isToolboxOpen" src="@/assets/img/caret-down.svg" />
+        <img class="icon" v-if="!menu.isToolboxOpen" src="@/assets/img/caret-down.svg" />
         <img class="icon" v-else src="@/assets/img/caret-up.svg" />
       </div>
-      <div v-if="isToolboxOpen" class="dropdown toolbox">
+      <div v-if="menu.isToolboxOpen" class="dropdown toolbox">
         <square
           :key="index"
           v-for="(tool, index) in level.tools"
@@ -44,13 +44,13 @@
 
       <div
         class="menu-bar"
-        @click="isObjectiveOpen = !isObjectiveOpen"
+        @click="toggleMenuBar('Objective')"
       >
         Objective
-        <img class="icon" v-if="!isObjectiveOpen" src="@/assets/img/caret-down.svg" />
+        <img class="icon" v-if="!menu.isObjectiveOpen" src="@/assets/img/caret-down.svg" />
         <img class="icon" v-else src="@/assets/img/caret-up.svg" />
       </div>
-      <div v-if="isObjectiveOpen" class="dropdown objective">
+      <div v-if="menu.isObjectiveOpen" class="dropdown objective">
         Level 1 Object: Power
         <div
           :key="rowIx"
@@ -91,8 +91,10 @@ export default {
     return {
       currentSquare: null,
       currentTool: null,
-      isObjectiveOpen: false,
-      isToolboxOpen: false,
+      menu: {
+        isObjectiveOpen: false,
+        isToolboxOpen: false,
+      }
     }
   },
   computed: {
@@ -169,7 +171,7 @@ export default {
       if (this.currentTool) {
         Object.assign(this.currentSquare, this.currentTool.create(), { tmp: false })
         this.currentTool = null
-        this.isToolboxOpen = false
+        this.menu.isToolboxOpen = false
       } else {
         this.$store.dispatch('GameBoard/mouseUp', pos)
       }
@@ -188,6 +190,15 @@ export default {
       } else if (ev.deltaY < -thresh) {
         this.pan('Up')
       }
+    },
+    toggleMenuBar(k) {
+      Object.keys(this.menu).forEach((key) => {
+        if (key.indexOf(k) > -1) {
+          this.menu[key] = !this.menu[key]
+        } else {
+          this.menu[key] = false
+        }
+      })
     },
   },
 }

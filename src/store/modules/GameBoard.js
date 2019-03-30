@@ -27,8 +27,8 @@ const levels = [
       GATE.AND,
     ],
     objective: [
-      ['ball green-on', 'bulb orange-on'],
-      ['ball green-off', 'bulb orange-off'],
+      ['ball green-on', 'bulb orange-off'],
+      ['ball green-off', 'bulb orange-on'],
     ],
   },
 ]
