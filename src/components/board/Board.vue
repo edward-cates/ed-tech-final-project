@@ -36,7 +36,7 @@
       <div v-if="isToolboxOpen" class="dropdown toolbox">
         <square
           :key="index"
-          v-for="(tool, index) in tools"
+          v-for="(tool, index) in level.tools"
           :square="tool"
           @mouseDown="currentTool = tool"
         />
@@ -52,20 +52,17 @@
       </div>
       <div v-if="isObjectiveOpen" class="dropdown objective">
         Level 1 Object: Power
-        <div class="row">
-          <div class="cell">
-            <div class="ball green-on" />
-          </div>
-          <div class="cell">
-            <div class="bulb orange-on" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="cell">
-            <div class="ball green-off" />
-          </div>
-          <div class="cell">
-            <div class="bulb orange-off" />
+        <div
+          :key="rowIx"
+          v-for="(row, rowIx) in level.objective"
+          class="row"
+        >
+          <div
+            :key="colIx"
+            v-for="(cl, colIx) in row"
+            class="cell"
+          >
+            <div :class="cl" />
           </div>
         </div>
       </div>
@@ -106,7 +103,7 @@ export default {
       'boardWidth',
       'isLoading',
       'squares',
-      'tools',
+      'level',
     ]),
     style() {
       const shift = `left: ${this.boardShiftX}px; top: ${this.boardShiftY}px`

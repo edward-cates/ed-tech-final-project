@@ -26,6 +26,10 @@ const levels = [
       GATE.OR,
       GATE.AND,
     ],
+    objective: [
+      ['ball green-on', 'bulb orange-on'],
+      ['ball green-off', 'bulb orange-off'],
+    ],
   },
 ]
 
@@ -39,7 +43,7 @@ const state = {
   isLoading: true,
   mousePath: null,
   squares: [],
-  tools: [],
+  level: null,
   viewport: {},
 }
 
@@ -440,8 +444,8 @@ const mutations = {
     horizBoxes = horizBoxes + ((horizBoxes + 1) % 2)
 
     const level = levels[state.currentLevel]
-
     const squares = []
+
     for (let row = 0; row < vertBoxes; ++row) {
       squares[row] = []
       for (let col = 0; col < horizBoxes; ++col) {
@@ -452,7 +456,7 @@ const mutations = {
     }
 
     state.squares = squares
-    state.tools = level.tools
+    state.level = level
 
     state.boardHeight = vertBoxes * sideLength
     state.boardWidth = horizBoxes * sideLength
