@@ -358,7 +358,7 @@ const mutations = {
   initializeMousePath(state, { rowIx, colIx }) {
     state.mousePath = {
       start: { rowIx, colIx },
-      end: null,
+      end: { rowIx, colIx },
       stack: [],
     }
   },
