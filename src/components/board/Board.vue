@@ -22,6 +22,18 @@
         />
       </div>
     </div>
+
+    <div class="menu">
+      <div class="menu-bar">
+        Toolbox
+        <img src="@/assets/img/caret-down.svg" />
+      </div>
+
+      <div class="menu-bar">
+        Objective
+        <img src="@/assets/img/caret-down.svg" />
+      </div>
+    </div>
   </div>
 </template>
 
