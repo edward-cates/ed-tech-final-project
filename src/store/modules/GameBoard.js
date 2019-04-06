@@ -812,7 +812,7 @@ const actions = {
     /**
      * See the evaluated board for a second.
      */
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise(resolve => setTimeout(resolve, 500))
 
     /**
      * Animate the drawing of the score.
@@ -827,7 +827,7 @@ const actions = {
         const shouldBeOn = test.cl.find(o => o.indexOf(sq.cl.substr(0, 3)) > -1).indexOf('on') > -1
         return shouldBeOn === (sq.cl.indexOf('on') > -1)
       })
-    }, 500)
+    }, 100)
   },
 }
 
