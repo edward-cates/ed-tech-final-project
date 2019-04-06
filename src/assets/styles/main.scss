@@ -96,6 +96,27 @@ body {
         }
       }
 
+      .controls {
+        width: 100%;
+
+        .game-control-entry {
+          border-top: 1px solid white;
+          margin-top: 20px;
+          padding: 10px 0;
+          padding-right: 10px;
+        }
+
+        .game-control-entry-title {
+          font-size: 18px;
+          font-weight: bold;
+        }
+
+        .game-control-entry-details {
+          font-size: 15px;
+          padding: 10px 0;
+        }
+      }
+
       .toolbox {
         text-align: center;
         width: 120px;

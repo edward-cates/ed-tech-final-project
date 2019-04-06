@@ -89,9 +89,51 @@
         </div>
       </div>
 
-      <div class="menu-bar">
+      <div
+        class="menu-bar"
+        @click="toggleMenuBar('Controls')"
+      >
         Controls
-        <img class="icon" src="@/assets/img/caret-down.svg" />
+        <img class="icon" v-if="!menu.isControlsOpen" src="@/assets/img/caret-down.svg" />
+        <img class="icon" v-else src="@/assets/img/caret-up.svg" />
+      </div>
+      <div v-if="menu.isControlsOpen" class="dropdown controls">
+        <div class="dropdown-title">
+          Game Controls
+
+          <div class="game-control-entry">
+            <div class="game-control-entry-title">
+              Drawing wire
+            </div>
+            <div class="game-control-entry-details">
+              To draw wire, press your mouse down on a square that is next to an ouput
+              and drag it to a square that is next to an input.
+            </div>
+          </div>
+
+          <div class="game-control-entry">
+            <div class="game-control-entry-title">
+              Toolbox
+            </div>
+            <div class="game-control-entry-details">
+              To use a tool from the Toolbox, click it once in the toolbox
+              and then click the square in which to place it.
+              Clicking and dragging also works.
+            </div>
+          </div>
+
+          <div class="game-control-entry">
+            <div class="game-control-entry-title">
+              Objective
+            </div>
+            <div class="game-control-entry-details">
+              In the Objective box, you can click a specific test case to see how it performs,
+              resulting in either a green check or a red X next to the test case.
+              You can also click "Test" to sequentially run through each test case.
+              The level is complete when each test case shows a green check beside it.
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -115,6 +157,7 @@ export default {
       currentTool: null,
       isCtrl: false,
       menu: {
+        isControlsOpen: false,
         isObjectiveOpen: false,
         isToolboxOpen: false,
       }
