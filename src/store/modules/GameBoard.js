@@ -10,7 +10,7 @@ const state = {
   boardShiftX: 0,
   boardShiftY: 0,
   boardWidth: 0,
-  currentLevel: 2,
+  currentLevel: 0,
   isLoading: true,
   mousePath: null,
   squares: [],

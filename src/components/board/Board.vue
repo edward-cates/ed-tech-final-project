@@ -52,7 +52,7 @@
       </div>
       <div v-if="menu.isObjectiveOpen" class="dropdown objective">
         <div class="dropdown-title">
-          Level 1 Object: Power
+          Level {{ currentLevel + 1 }}: {{ level.title }}
         </div>
 
         <button
@@ -126,6 +126,7 @@ export default {
       'boardShiftX',
       'boardShiftY',
       'boardWidth',
+      'currentLevel',
       'isLoading',
       'squares',
       'level',
