@@ -647,8 +647,10 @@ const actions = {
       if (sq.cl && sq.cl.indexOf('wire-nsew') > -1) {
         if (isFirst) {
           Vue.set(state.squares[rowIx + totalRowDiff], colIx + totalColDiff, {})
-          // eslint-disable-next-line
-          [[0, -1], [0, 1], [-1, 0], [1, 0]].forEach(([rd, cd]) => clearSquare({
+
+          const offsets = [[0,-1],[0,1],[-1,0],[1,0]]
+
+          offsets.forEach(([rd, cd]) => clearSquare({
             rowDiff: rd,
             colDiff: cd,
             totalRowDiff: totalRowDiff + rd,
