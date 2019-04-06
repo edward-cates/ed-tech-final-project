@@ -12,7 +12,6 @@ export default [
       },
     },
     tools: [
-      GATE.NOT,
     ],
     objective: [
       { cl: ['ball pnk-off', 'bulb blu-off'], score: null },

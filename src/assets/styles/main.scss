@@ -97,6 +97,9 @@ body {
       }
 
       .controls {
+        height: calc(100vh - 100px);
+        overflow-y: auto;
+        overflow-x: hidden;
         width: 100%;
 
         .game-control-entry {

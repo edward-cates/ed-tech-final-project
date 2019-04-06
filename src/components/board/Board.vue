@@ -20,6 +20,7 @@
           @mouseEnter="mouseEnter({ sq, rowIx, colIx })"
           @mouseLeave="mouseLeave({ sq })"
           @mouseUp="mouseUp({ rowIx, colIx })"
+          @rightClick="rightClick({ rowIx, colIx })"
         />
       </div>
     </div>
@@ -133,6 +134,15 @@
               The level is complete when each test case shows a green check beside it.
             </div>
           </div>
+
+          <div class="game-control-entry">
+            <div class="game-control-entry-title">
+              Removing wire and tools
+            </div>
+            <div class="game-control-entry-details">
+              Right click on wire or a tool to remove it.
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -187,11 +197,9 @@ export default {
   },
   created() {
     document.addEventListener('keydown', this.keyDown)
-    document.addEventListener('keyup', this.keyUp)
   },
   beforeDestroy() {
     document.removeEventListener('keydown', this.keyDown)
-    document.removeEventListener('keyup', this.keyUp)
   },
   mounted() {
     const board = this.$refs.board.getBoundingClientRect()
@@ -214,17 +222,10 @@ export default {
       if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].indexOf(ev.key) > -1) {
         ev.preventDefault()
         this.pan(ev.key.substring('Arrow'.length))
-      } else if (ev.key === 'Control') {
-        this.isCtrl = true
-      }
-    },
-    keyUp(ev) {
-      if (ev.key === 'Control') {
-        this.isCtrl = false
       }
     },
     mouseDown({ rowIx, colIx }) {
-      if (!this.currentTool && !this.isCtrl) {
+      if (!this.currentTool) {
         this.$store.dispatch('GameBoard/mouseDown', { rowIx, colIx })
       }
     },
@@ -256,11 +257,12 @@ export default {
           this.currentTool = null
           this.menu.isToolboxOpen = false
         }
-      } else if (pos && this.isCtrl) {
-        this.$store.dispatch('GameBoard/removePath', pos)
       } else {
         this.$store.dispatch('GameBoard/mouseUp', pos)
       }
+    },
+    rightClick({ rowIx, colIx }) {
+      this.$store.dispatch('GameBoard/removePath', { rowIx, colIx })
     },
     scroll(ev) {
       const thresh = 10

@@ -593,6 +593,12 @@ const actions = {
 
     state.currentLevel += 1
     commit('render')
+
+    if ([1, 2].indexOf(state.currentLevel)) {
+      setTimeout(() => {
+        alert('Check your toolbox!')
+      }, 100)
+    }
   },
 
   pan({ commit }, direction) {

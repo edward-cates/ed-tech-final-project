@@ -1,6 +1,7 @@
 <template>
   <div
     class="square"
+    @click.right.prevent="$emit('rightClick')"
     @mousedown.prevent="$emit('mouseDown')"
     @mouseenter="$emit('mouseEnter')"
     @mouseleave="$emit('mouseLeave')"
