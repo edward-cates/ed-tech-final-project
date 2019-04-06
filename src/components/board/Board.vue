@@ -205,9 +205,14 @@ export default {
     },
     mouseUp(pos) {
       if (this.currentTool) {
-        Object.assign(this.currentSquare, this.currentTool.create(), { tmp: false })
-        this.currentTool = null
-        this.menu.isToolboxOpen = false
+        /**
+         * Check that nothing is being overwritten.
+         */
+        if (this.currentSquare.tmp) {
+          Object.assign(this.currentSquare, this.currentTool.create(), { tmp: false })
+          this.currentTool = null
+          this.menu.isToolboxOpen = false
+        }
       } else if (pos && this.isCtrl) {
         this.$store.dispatch('GameBoard/removePath', pos)
       } else {

@@ -9,7 +9,9 @@ export default [
         9: { cl: 'blu-lgt-s-off', conn: { rowDiff: 1, colDiff: 0 } },
       },
     },
-    tools: [],
+    tools: [
+      GATE.NOT,
+    ],
     objective: [
       { cl: ['ball pnk-off', 'bulb blu-off'], score: null },
       { cl: ['ball pnk-on', 'bulb blu-on'], score: null },

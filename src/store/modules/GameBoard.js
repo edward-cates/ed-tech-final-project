@@ -600,58 +600,152 @@ const actions = {
   },
 
   removePath({ state, commit }, { rowIx, colIx }) {
-    const clearSquare = ({ rowDiff, colDiff, first, second }) => {
-      const sq = state.squares[rowIx + rowDiff][colIx + colDiff]
+    const clearSquare = ({ rowDiff, colDiff, totalRowDiff, totalColDiff, isFirst }) => {
+      const sq = state.squares[rowIx + totalRowDiff][colIx + totalColDiff]
+
+      if (sq.cl && sq.cl.indexOf('lgt') > -1) {
+        sq.cl = sq.cl.replace('on', 'off')
+        return false
+      }
 
       if (sq.cl && sq.cl.indexOf('gate') > -1) {
-        if (second) {
+        if (!isFirst) {
           /**
            * `second` indicates that this gate sits at the end of a wire
            * that just went away.
            */
           const input = sq.inputs
-            .find(input => input.rowDiff === -second.rowDiff && input.colDiff === -second.colDiff)
+            .find(input => input.rowDiff === -rowDiff && input.colDiff === -colDiff)
 
-          input.isOn = false
-
-          sq.evaluate()
+          if (input) {
+            input.isOn = false  
+            sq.evaluate()
+          }
 
           return false
-        } else if (!first) {
-          /**
-           * `!first && !second` implies that this was the original square.
-           */
-          Vue.set(state.squares[rowIx + rowDiff], colIx + colDiff, {})
+        } else {
+          Vue.set(state.squares[rowIx + totalRowDiff], colIx + totalColDiff, {})
 
           sq.inputs.forEach(input => clearSquare({
-            rowDiff: rowDiff + input.rowDiff,
-            colDiff: colDiff + input.colDiff,
-            first: input,
+            rowDiff: input.rowDiff,
+            colDiff: input.colDiff,
+            totalRowDiff: totalRowDiff + input.rowDiff,
+            totalColDiff: totalColDiff + input.colDiff,
           }))
 
           sq.outputs.forEach(output => clearSquare({
-            rowDiff: rowDiff + output.rowDiff,
-            colDiff: colDiff + output.colDiff,
-            second: output,
+            rowDiff: output.rowDiff,
+            colDiff: output.colDiff,
+            totalRowDiff: totalRowDiff + output.rowDiff,
+            totalColDiff: totalColDiff + output.colDiff,
           }))
 
           return true
         }
       }
 
-      if (sq.cl && sq.cl.indexOf('wire') > -1) {
-        Vue.set(state.squares[rowIx + rowDiff], colIx + colDiff, {})
+      if (sq.cl && sq.cl.indexOf('wire-nsew') > -1) {
+        if (isFirst) {
+          Vue.set(state.squares[rowIx + totalRowDiff], colIx + totalColDiff, {})
+          // eslint-disable-next-line
+          [[0, -1], [0, 1], [-1, 0], [1, 0]].forEach(([rd, cd]) => clearSquare({
+            rowDiff: rd,
+            colDiff: cd,
+            totalRowDiff: totalRowDiff + rd,
+            totalColDiff: totalColDiff + cd,
+          }))
+        } else if (rowDiff !== 0) {
+          /**
+           * Wire vertically adjacent is being wiped.
+           */
+          const isOn = sq.cl.indexOf('horiz-on') > -1
+          sq.cl = `wire-ew-${isOn ? 'on' : 'off'}`
+          /**
+           * Get connection info from square to the left.
+           */
+          const leftSq = state.squares[rowIx + totalRowDiff][colIx + totalColDiff - 1]
+          if (!leftSq.conn || leftSq.conn.second.colDiff === 1) {
+            /**
+             * Square to the left goes left-to-right.
+             * This square should go left-to-right.
+             */
+            sq.conn = {
+              first: { rowDiff: 0, colDiff: -1 },
+              second: { rowDiff: 0, colDiff: 1 },
+            }
+          } else {
+            /**
+             * Square to the left goes right-to-left.
+             * This square should go right-to-left.
+             */
+            sq.conn = {
+              first: { rowDiff: 0, colDiff: 1 },
+              second: { rowDiff: 0, colDiff: -1 },
+            }
+          }
+        } else {
+          /**
+           * Wire horizontally adjacent is being wiped.
+           */
+          const isOn = sq.cl.indexOf('vert-on') > -1
+          sq.cl = `wire-ns-${isOn ? 'on' : 'off'}`
+          /**
+           * Get connection info from square above.
+           */
+          const aboveSq = state.squares[rowIx + totalRowDiff - 1][colIx + totalColDiff]
+          if (!aboveSq.conn || aboveSq.conn.second.rowDiff === 1) {
+            /**
+             * Square above goes top-to-bottom. So should this square.
+             */
+            sq.conn = {
+              first: { rowDiff: -1, colDiff: 0 },
+              second: { rowDiff: 1, colDiff: 0 },
+            }
+          } else {
+            /**
+             * Square above goes bottom-to-top. So should this square.
+             */
+            sq.conn = {
+              first: { rowDiff: 1, colDiff: 0 },
+              second: { rowDiff: -1, colDiff: 0 },
+            }
+          }
+        }
 
         clearSquare({
-          rowDiff: rowDiff + sq.conn.first.rowDiff,
-          colDiff: colDiff + sq.conn.first.colDiff,
-          first: sq.conn.first,
+          rowDiff,
+          colDiff,
+          totalRowDiff: totalRowDiff + rowDiff,
+          totalColDiff: totalColDiff + colDiff,
+        })
+
+        return true
+      }
+
+      if (sq.cl && sq.cl.indexOf('wire') > -1) {
+        /**
+         * Make sure the orientation aligns
+         */
+        if (!(isFirst
+          || sq.conn.first.rowDiff === -rowDiff && sq.conn.first.colDiff === -colDiff
+          || sq.conn.second.rowDiff === -rowDiff && sq.conn.second.colDiff === -colDiff)) {
+          return false
+        }
+
+        Vue.set(state.squares[rowIx + totalRowDiff], colIx + totalColDiff, {})
+
+        clearSquare({
+          rowDiff: sq.conn.first.rowDiff,
+          colDiff: sq.conn.first.colDiff,
+          totalRowDiff: totalRowDiff + sq.conn.first.rowDiff,
+          totalColDiff: totalColDiff + sq.conn.first.colDiff,
         })
 
         clearSquare({
-          rowDiff: rowDiff + sq.conn.second.rowDiff,
-          colDiff: colDiff + sq.conn.second.colDiff,
-          second: sq.conn.second,
+          rowDiff: sq.conn.second.rowDiff,
+          colDiff: sq.conn.second.colDiff,
+          totalRowDiff: totalRowDiff + sq.conn.second.rowDiff,
+          totalColDiff: totalColDiff + sq.conn.second.colDiff,
         })
 
         return true
@@ -660,7 +754,7 @@ const actions = {
       return false
     }
 
-    if (clearSquare({ rowDiff: 0, colDiff: 0 })) {
+    if (clearSquare({ rowDiff: 0, colDiff: 0, totalRowDiff: 0, totalColDiff: 0, isFirst: true })) {
       /**
        * Reset scores if something was changed.
        */
