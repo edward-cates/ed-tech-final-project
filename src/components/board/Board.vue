@@ -143,6 +143,15 @@
               Right click on wire or a tool to remove it.
             </div>
           </div>
+
+          <div class="game-control-entry">
+            <div class="game-control-entry-title">
+              Pan the breadboard
+            </div>
+            <div class="game-control-entry-details">
+              You can pan the board using the arrow keys.
+            </div>
+          </div>
         </div>
       </div>
     </div>
