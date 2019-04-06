@@ -55,8 +55,18 @@
           Level 1 Object: Power
         </div>
 
-        <button class="test-btn">
+        <button
+          v-if="!isComplete"
+          class="test-btn"
+          @click="testAll">
           Test
+        </button>
+
+        <button
+          v-else
+          class="test-btn nxt-lvl-btn"
+          @click="nextLevel">
+          Next Level
         </button>
 
         <div
@@ -120,6 +130,9 @@ export default {
       'squares',
       'level',
     ]),
+    isComplete() {
+      return this.level.objective.every(o => o.score === true)
+    },
     style() {
       const shift = `left: ${this.boardShiftX}px; top: ${this.boardShiftY}px`
       if (this.boardWidth && this.boardHeight) {
@@ -149,6 +162,7 @@ export default {
       // 'mouseDown',
       // 'mouseEnter',
       // 'mouseUp',
+      'nextLevel',
       'pan',
       'testCase',
     ]),
@@ -218,6 +232,20 @@ export default {
       this.toggleMenuBar('Objective')
       await this.testCase({ rowIx })
       this.toggleMenuBar('Objective')
+    },
+    async testAll() {
+      /**
+       * Reset all previous scores.
+       */
+      this.level.objective.forEach(o => o.score = null)
+
+      /**
+       * Run each test sequentially
+       */
+      for (let rowIx = 0; rowIx < this.level.objective.length; ++rowIx) {
+        await this.test({ rowIx })
+        await new Promise(resolve => setTimeout(resolve, 1000))
+      }
     },
     toggleMenuBar(k) {
       Object.keys(this.menu).forEach((key) => {

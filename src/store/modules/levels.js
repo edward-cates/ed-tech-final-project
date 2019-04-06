@@ -10,8 +10,8 @@ export default [
     },
     tools: [],
     objective: [
-      ['ball pnk-off', 'bulb blu-off'],
-      ['ball pnk-on', 'bulb blu-on'],
+      { cl: ['ball pnk-off', 'bulb blu-off'], score: null },
+      { cl: ['ball pnk-on', 'bulb blu-on'], score: null },
     ],
   },
   {
@@ -25,18 +25,18 @@ export default [
       GATE.NOT,
     ],
     objective: [
-      ['ball pnk-off', 'bulb blu-on'],
-      ['ball pnk-on', 'bulb blu-off'],
+      { cl: ['ball pnk-off', 'bulb blu-on'], score: null },
+      { cl: ['ball pnk-on', 'bulb blu-off'], score: null },
     ],
   },
   {
     squares: {
       2: {
-        3: { cl: 'pnk-btn-off' },
-        9: { cl: 'blu-lgt-s-off', conn: { rowDiff: 1, colDiff: 0 } },
+        7: { cl: 'blu-lgt-s-off', conn: { rowDiff: 1, colDiff: 0 } },
       },
       5: {
-        3: { cl: 'grn-btn-off' },
+        2: { cl: 'pnk-btn-off' },
+        5: { cl: 'grn-btn-off' },
       },
     },
     tools: [

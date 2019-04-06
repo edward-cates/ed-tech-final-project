@@ -428,11 +428,9 @@ const mutations = {
     }
   },
 
-  render(state, { board }) {
-    state.board = board
-
-    let vertBoxes = Math.ceil(board.height / sideLength)
-    let horizBoxes = Math.ceil(board.width / sideLength)
+  render(state) {
+    let vertBoxes = Math.ceil(state.board.height / sideLength)
+    let horizBoxes = Math.ceil(state.board.width / sideLength)
     /**
      * Make # boxes in each direction odd
      * so there can be a centered box in the middle.
@@ -458,8 +456,8 @@ const mutations = {
     state.boardHeight = vertBoxes * sideLength
     state.boardWidth = horizBoxes * sideLength
 
-    const extraX = state.boardWidth - board.width
-    const extraY = state.boardHeight - board.height
+    const extraX = state.boardWidth - state.board.width
+    const extraY = state.boardHeight - state.board.height
 
     state.boardShiftX = -(extraX / 2)
     state.boardShiftY = -(extraY / 2)
@@ -477,8 +475,9 @@ const mutations = {
 }
 
 const actions = {
-  loadViewport({ commit }, { board }) {
-    commit('render', { board })
+  loadViewport({ state, commit }, { board }) {
+    state.board = board
+    commit('render')
   },
 
   mouseDown({ commit }, { rowIx, colIx }) {
@@ -584,6 +583,16 @@ const actions = {
     }
 
     commit('evaluateBoard')
+  },
+
+  nextLevel({ state, commit }) {
+    if (state.currentLevel === levels.length - 1) {
+      alert('You beat the game!')
+      return
+    }
+
+    state.currentLevel += 1
+    commit('render')
   },
 
   pan({ commit }, direction) {
@@ -705,13 +714,24 @@ const actions = {
     await new Promise(resolve => commit('evaluateBoard', resolve))
 
     /**
-     * After the board is evaluated,
-     * check the outputs (bulbs).
+     * See the evaluated board for a second.
      */
-    test.score = bulbs.every((sq) => {
-      const shouldBeOn = test.cl.find(o => o.indexOf(sq.cl.substr(0, 3)) > -1).indexOf('on') > -1
-      return shouldBeOn === (sq.cl.indexOf('on') > -1)
-    })
+    await new Promise(resolve => setTimeout(resolve, 1000))
+
+    /**
+     * Animate the drawing of the score.
+     */
+    test.score = null
+    setTimeout(() => {
+      /**
+       * After the board is evaluated,
+       * check the outputs (bulbs).
+       */
+      test.score = bulbs.every((sq) => {
+        const shouldBeOn = test.cl.find(o => o.indexOf(sq.cl.substr(0, 3)) > -1).indexOf('on') > -1
+        return shouldBeOn === (sq.cl.indexOf('on') > -1)
+      })
+    }, 500)
   },
 }
 
