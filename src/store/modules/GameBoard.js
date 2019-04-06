@@ -591,40 +591,64 @@ const actions = {
   },
 
   removePath({ state, commit }, { rowIx, colIx }) {
-    const clearSquare = ({ rowDiff, colDiff, second }) => {
+    const clearSquare = ({ rowDiff, colDiff, first, second }) => {
       const sq = state.squares[rowIx + rowDiff][colIx + colDiff]
 
-      if (sq.cl && sq.cl.indexOf('gate') > -1 && second) {
-        /**
-         * `second` indicates that this gate sits at the end of a wire
-         * that just went away.
-         */
-        const input = sq.inputs
-          .find(input => input.rowDiff === -second.rowDiff && input.colDiff === -second.colDiff)
+      if (sq.cl && sq.cl.indexOf('gate') > -1) {
+        if (second) {
+          /**
+           * `second` indicates that this gate sits at the end of a wire
+           * that just went away.
+           */
+          const input = sq.inputs
+            .find(input => input.rowDiff === -second.rowDiff && input.colDiff === -second.colDiff)
 
-        input.isOn = false
+          input.isOn = false
 
-        sq.evaluate()
+          sq.evaluate()
+
+          return false
+        } else if (!first) {
+          /**
+           * `!first && !second` implies that this was the original square.
+           */
+          Vue.set(state.squares[rowIx + rowDiff], colIx + colDiff, {})
+
+          sq.inputs.forEach(input => clearSquare({
+            rowDiff: rowDiff + input.rowDiff,
+            colDiff: colDiff + input.colDiff,
+            first: input,
+          }))
+
+          sq.outputs.forEach(output => clearSquare({
+            rowDiff: rowDiff + output.rowDiff,
+            colDiff: colDiff + output.colDiff,
+            second: output,
+          }))
+
+          return true
+        }
       }
 
-      if (!sq.cl || sq.cl.indexOf('wire') < 0) {
-        return false
+      if (sq.cl && sq.cl.indexOf('wire') > -1) {
+        Vue.set(state.squares[rowIx + rowDiff], colIx + colDiff, {})
+
+        clearSquare({
+          rowDiff: rowDiff + sq.conn.first.rowDiff,
+          colDiff: colDiff + sq.conn.first.colDiff,
+          first: sq.conn.first,
+        })
+
+        clearSquare({
+          rowDiff: rowDiff + sq.conn.second.rowDiff,
+          colDiff: colDiff + sq.conn.second.colDiff,
+          second: sq.conn.second,
+        })
+
+        return true
       }
 
-      Vue.set(state.squares[rowIx + rowDiff], colIx + colDiff, {})
-
-      clearSquare({
-        rowDiff: rowDiff + sq.conn.first.rowDiff,
-        colDiff: colDiff + sq.conn.first.colDiff,
-      })
-
-      clearSquare({
-        rowDiff: rowDiff + sq.conn.second.rowDiff,
-        colDiff: colDiff + sq.conn.second.colDiff,
-        second: sq.conn.second,
-      })
-
-      return true
+      return false
     }
 
     if (clearSquare({ rowDiff: 0, colDiff: 0 })) {
