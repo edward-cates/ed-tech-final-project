@@ -51,19 +51,31 @@
         <img class="icon" v-else src="@/assets/img/caret-up.svg" />
       </div>
       <div v-if="menu.isObjectiveOpen" class="dropdown objective">
-        Level 1 Object: Power
+        <div class="dropdown-title">
+          Level 1 Object: Power
+        </div>
+
+        <button class="test-btn">
+          Test
+        </button>
+
         <div
           :key="rowIx"
           v-for="(row, rowIx) in level.objective"
           class="row"
+          @click="test({ rowIx })"
         >
           <div
             :key="colIx"
-            v-for="(cl, colIx) in row"
+            v-for="(cl, colIx) in row.cl"
             class="cell"
           >
             <div :class="cl" />
           </div>
+
+          <img class="score-check" v-if="row.score === true" src="@/assets/img/check.svg" />
+
+          <img class="score-x" v-else-if="row.score === false" src="@/assets/img/x.svg" />
         </div>
       </div>
 
@@ -78,7 +90,7 @@
 <script>
 import Vue from 'vue'
 
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 import Square from './Square'
 
@@ -91,6 +103,7 @@ export default {
     return {
       currentSquare: null,
       currentTool: null,
+      isCtrl: false,
       menu: {
         isObjectiveOpen: false,
         isToolboxOpen: false,
@@ -117,11 +130,11 @@ export default {
   },
   created() {
     document.addEventListener('keydown', this.keyDown)
-    // document.addEventListener('mousewheel', this.scroll)
+    document.addEventListener('keyup', this.keyUp)
   },
   beforeDestroy() {
     document.removeEventListener('keydown', this.keyDown)
-    // document.removeEventListener('mousewheel', this.scroll)
+    document.removeEventListener('keyup', this.keyUp)
   },
   mounted() {
     const board = this.$refs.board.getBoundingClientRect()
@@ -137,15 +150,23 @@ export default {
       // 'mouseEnter',
       // 'mouseUp',
       'pan',
+      'testCase',
     ]),
     keyDown(ev) {
       if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].indexOf(ev.key) > -1) {
         ev.preventDefault()
         this.pan(ev.key.substring('Arrow'.length))
+      } else if (ev.key === 'Control') {
+        this.isCtrl = true
+      }
+    },
+    keyUp(ev) {
+      if (ev.key === 'Control') {
+        this.isCtrl = false
       }
     },
     mouseDown({ rowIx, colIx }) {
-      if (!this.currentTool) {
+      if (!this.currentTool && !this.isCtrl) {
         this.$store.dispatch('GameBoard/mouseDown', { rowIx, colIx })
       }
     },
@@ -172,6 +193,8 @@ export default {
         Object.assign(this.currentSquare, this.currentTool.create(), { tmp: false })
         this.currentTool = null
         this.menu.isToolboxOpen = false
+      } else if (pos && this.isCtrl) {
+        this.$store.dispatch('GameBoard/removePath', pos)
       } else {
         this.$store.dispatch('GameBoard/mouseUp', pos)
       }
@@ -190,6 +213,11 @@ export default {
       } else if (ev.deltaY < -thresh) {
         this.pan('Up')
       }
+    },
+    async test({ rowIx }) {
+      this.toggleMenuBar('Objective')
+      await this.testCase({ rowIx })
+      this.toggleMenuBar('Objective')
     },
     toggleMenuBar(k) {
       Object.keys(this.menu).forEach((key) => {

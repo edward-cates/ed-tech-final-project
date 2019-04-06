@@ -1,39 +1,8 @@
 import Vue from 'vue'
 
-import GATE from './gates'
-
 const sideLength = 100 + 2 + 4 // width + border + margin
 
-const levels = [
-  {
-    squares: {
-      2: {
-        1: { cl: 'pnk-btn-off' },
-        9: { cl: 'blu-lgt-s-off', conn: { rowDiff: 1, colDiff: 0 } },
-      },
-      4: {
-        1: { cl: 'grn-btn-off' },
-        9: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
-      },
-      // 6: {
-      //   1: { cl: 'grn-btn-off' },
-      //   9: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
-      // },
-    },
-    tools: [
-      GATE.SPLIT,
-      GATE.NOT,
-      GATE.OR,
-      GATE.AND,
-    ],
-    objective: [
-      ['ball pink-off', 'ball green-off', 'bulb blue-off', 'bulb orange-off'],
-      ['ball pink-off', 'ball green-off', 'bulb blue-off', 'bulb orange-off'],
-      ['ball pink-on', 'ball green-on', 'bulb blue-on', 'bulb orange-on'],
-      ['ball pink-on', 'ball green-on', 'bulb blue-on', 'bulb orange-on'],
-    ],
-  },
-]
+import levels from './levels'
 
 const state = {
   board: {},
@@ -41,7 +10,7 @@ const state = {
   boardShiftX: 0,
   boardShiftY: 0,
   boardWidth: 0,
-  currentLevel: 0,
+  currentLevel: 2,
   isLoading: true,
   mousePath: null,
   squares: [],
@@ -59,7 +28,17 @@ const getters = {
  */
 function findSecond({ rowIx, colIx }) {
   const diffs = [[0,-1],[0,1],[-1,0],[1,0]].find(([rowDiff, colDiff]) => {
-    const sq = state.squares[rowIx + rowDiff][colIx + colDiff]
+    const row = state.squares[rowIx + rowDiff]
+
+    if (!row) {
+      return false
+    }
+
+    const sq = row[colIx + colDiff]
+
+    if (!sq) {
+      return false
+    }
 
     let aligns = false
 
@@ -223,7 +202,7 @@ const mutations = {
   /**
    * TODO Check solutions while evaluating board.
    */
-  async evaluateBoard(state) {
+  async evaluateBoard(state, resolve) {
     const evaluateSquare = async ({
       rowDiff,
       colDiff,
@@ -337,6 +316,10 @@ const mutations = {
         }
       }))
     }))
+
+    if (resolve) {
+      resolve()
+    }
   },
 
   finalizeMousePath(state) {
@@ -345,6 +328,14 @@ const mutations = {
      * Otherwise, set it in place.
      */
     const doesTerminate = !!findSecond(state.mousePath.end)
+
+    if (doesTerminate) {
+      /**
+       * Previous scores no longer valid.
+       */
+      const level = levels[state.currentLevel]
+      level.objective.forEach(o => o.score = null)
+    }
 
     state.mousePath.stack.forEach(({ rowIx, colIx }) => {
       const sq = state.squares[rowIx][colIx]
@@ -503,9 +494,19 @@ const actions = {
      * connections to those.
      */
     [[0,-1],[0,1],[-1,0],[1,0]].forEach(([rowDiff, colDiff]) => {
-      let aligns = false
+      const row = state.squares[rowIx + rowDiff]
 
-      sq = state.squares[rowIx + rowDiff][colIx + colDiff]
+      if (!row) {
+        return
+      }
+
+      sq = row[colIx + colDiff]
+
+      if (!sq) {
+        return
+      }
+
+      let aligns = false
 
       if (sq.cl && sq.cl.indexOf('btn') > -1) {
         aligns = true
@@ -587,6 +588,106 @@ const actions = {
 
   pan({ commit }, direction) {
     commit(`pan${direction}`)
+  },
+
+  removePath({ state, commit }, { rowIx, colIx }) {
+    const clearSquare = ({ rowDiff, colDiff, second }) => {
+      const sq = state.squares[rowIx + rowDiff][colIx + colDiff]
+
+      if (sq.cl && sq.cl.indexOf('gate') > -1 && second) {
+        /**
+         * `second` indicates that this gate sits at the end of a wire
+         * that just went away.
+         */
+        const input = sq.inputs
+          .find(input => input.rowDiff === -second.rowDiff && input.colDiff === -second.colDiff)
+
+        input.isOn = false
+
+        sq.evaluate()
+      }
+
+      if (!sq.cl || sq.cl.indexOf('wire') < 0) {
+        return false
+      }
+
+      Vue.set(state.squares[rowIx + rowDiff], colIx + colDiff, {})
+
+      clearSquare({
+        rowDiff: rowDiff + sq.conn.first.rowDiff,
+        colDiff: colDiff + sq.conn.first.colDiff,
+      })
+
+      clearSquare({
+        rowDiff: rowDiff + sq.conn.second.rowDiff,
+        colDiff: colDiff + sq.conn.second.colDiff,
+        second: sq.conn.second,
+      })
+
+      return true
+    }
+
+    if (clearSquare({ rowDiff: 0, colDiff: 0 })) {
+      /**
+       * Reset scores if something was changed.
+       */
+      const level = levels[state.currentLevel]
+      level.objective.forEach(o => o.score = null)
+
+      commit('evaluateBoard')
+    }
+  },
+
+  async testCase({ state, commit }, { rowIx: objectiveIx }) {
+    const level = levels[state.currentLevel]
+    const test = level.objective[objectiveIx]
+    /**
+     * Set inputs according to `objective`
+     * and check outputs.
+     */
+    let isDiff = false
+
+    const bulbs = []
+
+    state.squares.forEach((row) => {
+      row.forEach((sq) => {
+        if (sq.cl && sq.cl.indexOf('btn') > -1) {
+          // power button
+          /**
+           * Find corresponding input
+           * No color should be used for anything more than once.
+           */
+          const isOn = test.cl.find(o => o.indexOf(sq.cl.substr(0, 3)) > -1).indexOf('on') > -1
+
+          if (isOn !== sq.cl.indexOf('on') > -1) {
+            /**
+             * At least 1 button changed
+             */
+            isDiff = true
+          }
+
+          sq.cl = sq.cl.replace(isOn ? 'off' : 'on', isOn ? 'on' : 'off')
+        } else if (sq.cl && sq.cl.indexOf('lgt') > -1) {
+          // bulb a.k.a. output
+          bulbs.push(sq)
+        }
+      })
+    })
+
+    if (test.score !== null && !isDiff) {
+      return
+    }
+
+    await new Promise(resolve => commit('evaluateBoard', resolve))
+
+    /**
+     * After the board is evaluated,
+     * check the outputs (bulbs).
+     */
+    test.score = bulbs.every((sq) => {
+      const shouldBeOn = test.cl.find(o => o.indexOf(sq.cl.substr(0, 3)) > -1).indexOf('on') > -1
+      return shouldBeOn === (sq.cl.indexOf('on') > -1)
+    })
   },
 }
 
