@@ -594,10 +594,10 @@ const actions = {
     state.currentLevel += 1
     commit('render')
 
-    if ([1, 2].indexOf(state.currentLevel)) {
+    if ([1, 2].indexOf(state.currentLevel) > -1) {
       setTimeout(() => {
-        alert('Check your toolbox!')
-      }, 100)
+        alert('There is a new tool in your toolbox!')
+      }, 200)
     }
   },
 
