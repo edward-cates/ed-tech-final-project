@@ -594,9 +594,9 @@ const actions = {
     state.currentLevel += 1
     commit('render')
 
-    if ([1, 2].indexOf(state.currentLevel) > -1) {
+    if ([1, 2, 4].indexOf(state.currentLevel) > -1) {
       setTimeout(() => {
-        alert('There is a new tool in your toolbox!')
+        alert('There are new tools in your toolbox!')
       }, 200)
     }
   },

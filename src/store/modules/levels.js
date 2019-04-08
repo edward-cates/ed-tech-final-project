@@ -48,6 +48,7 @@ export default [
       },
     },
     tools: [
+      GATE.NOT,
       GATE.OR,
     ],
     objective: [
@@ -77,6 +78,30 @@ export default [
       { cl: ['ball pnk-off', 'ball grn-on', 'bulb blu-off'], score: null },
       { cl: ['ball pnk-on', 'ball grn-off', 'bulb blu-off'], score: null },
       { cl: ['ball pnk-on', 'ball grn-on', 'bulb blu-on'], score: null },
+    ],
+  },
+  {
+    title: '"Xor"',
+    squares: {
+      2: {
+        7: { cl: 'blu-lgt-s-off', conn: { rowDiff: 1, colDiff: 0 } },
+      },
+      5: {
+        2: { cl: 'pnk-btn-off' },
+        5: { cl: 'grn-btn-off' },
+      },
+    },
+    tools: [
+      GATE.NOT,
+      GATE.OR,
+      GATE.SPLIT,
+      GATE.AND,
+    ],
+    objective: [
+      { cl: ['ball pnk-off', 'ball grn-off', 'bulb blu-off'], score: null },
+      { cl: ['ball pnk-off', 'ball grn-on', 'bulb blu-on'], score: null },
+      { cl: ['ball pnk-on', 'ball grn-off', 'bulb blu-on'], score: null },
+      { cl: ['ball pnk-on', 'ball grn-on', 'bulb blu-off'], score: null },
     ],
   },
 ]
