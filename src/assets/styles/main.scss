@@ -93,6 +93,7 @@ body {
           font-size: 20px;
           padding-top: 12px;
           padding-left: 10px;
+          margin-bottom: 10px;
         }
       }
 
@@ -133,6 +134,7 @@ body {
       }
 
       .objective {
+        padding-bottom: 10px;
         width: 100%;
 
         .test-btn {
@@ -153,8 +155,7 @@ body {
         }
 
         .row {
-          margin-top: 10px;
-          padding: 5px 10px;
+          padding: 15px 10px;
 
           &:hover {
             background-color: #4f4f4f;
@@ -163,6 +164,7 @@ body {
           .cell {
             display: inline-block;
             margin-right: 10px;
+            margin-top: 4px;
 
             .ball {
               width: 30px;
