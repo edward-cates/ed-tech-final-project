@@ -91,8 +91,8 @@ body {
         
         .dropdown-title {
           font-size: 20px;
-          padding-top: 12px;
-          padding-left: 10px;
+          padding-top: 22px;
+          padding-left: 60px;
           margin-bottom: 10px;
         }
       }
@@ -138,15 +138,15 @@ body {
         width: 100%;
 
         .test-btn {
-          background-color: gray;
+          background-color: #101010;
           border: none;
           color: white;
-          font-size: 18px;
+          font-size: 20px;
           outline: none;
-          padding: 8px 20px;
+          padding: 10px 20px;
           position: absolute;
-          right: 10px;
-          top: 10px;
+          right: 16px;
+          top: 16px;
         }
 
         .nxt-lvl-btn {
@@ -163,6 +163,7 @@ body {
 
           .cell {
             display: inline-block;
+            margin-left: 10px;
             margin-right: 10px;
             margin-top: 4px;
 
@@ -189,11 +190,24 @@ body {
 
           .score-check {
             margin-bottom: 8px;
+            margin-left: 8px;
           }
 
           .score-x {
             margin-bottom: 3px;
+            margin-left: 8px;
           }
+        }
+
+        .explanation {
+          padding: 20px 20px;
+        }
+
+        .info {
+          position: absolute;
+          left: 20px;
+          top: 20px;
+          cursor: pointer;
         }
       }
     }

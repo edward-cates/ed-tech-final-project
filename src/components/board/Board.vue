@@ -52,6 +52,12 @@
         <img class="icon" v-else src="@/assets/img/caret-up.svg" />
       </div>
       <div v-if="menu.isObjectiveOpen" class="dropdown objective">
+        <img
+          @click="showObjectiveInfo = !showObjectiveInfo"
+          class="info"
+          src="@/assets/img/info.svg"
+        />
+
         <div class="dropdown-title">
           Level {{ currentLevel + 1 }}: {{ level.title }}
         </div>
@@ -70,23 +76,32 @@
           Next Level
         </button>
 
-        <div
-          :key="rowIx"
-          v-for="(row, rowIx) in level.objective"
-          class="row"
-          @click="test({ rowIx })"
-        >
+        <template v-if="!showObjectiveInfo">
           <div
-            :key="colIx"
-            v-for="(cl, colIx) in row.cl"
-            class="cell"
+            :key="rowIx"
+            v-for="(row, rowIx) in level.objective"
+            class="row"
+            @click="test({ rowIx })"
           >
-            <div :class="cl" />
+            <div
+              :key="colIx"
+              v-for="(cl, colIx) in row.cl"
+              class="cell"
+            >
+              <div :class="cl" />
+            </div>
+
+            <img class="score-check" v-if="row.score === true" src="@/assets/img/check.svg" />
+
+            <img class="score-x" v-else-if="row.score === false" src="@/assets/img/x.svg" />
           </div>
+        </template>
 
-          <img class="score-check" v-if="row.score === true" src="@/assets/img/check.svg" />
-
-          <img class="score-x" v-else-if="row.score === false" src="@/assets/img/x.svg" />
+        <div
+          v-else
+          class="explanation"
+        >
+          {{ level.explanation }}
         </div>
       </div>
 
@@ -179,7 +194,8 @@ export default {
         isControlsOpen: false,
         isObjectiveOpen: false,
         isToolboxOpen: false,
-      }
+      },
+      showObjectiveInfo: false,
     }
   },
   computed: {
@@ -315,6 +331,8 @@ export default {
           this.menu[key] = false
         }
       })
+
+      this.showObjectiveInfo = false
     },
   },
 }

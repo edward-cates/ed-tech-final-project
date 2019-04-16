@@ -17,6 +17,7 @@ export default [
       { cl: ['ball pnk-off', 'bulb blu-off'], score: null },
       { cl: ['ball pnk-on', 'bulb blu-on'], score: null },
     ],
+    explanation: 'The button should power on the bulb.',
   },
   {
     title: 'Invert signal',
@@ -35,6 +36,7 @@ export default [
       { cl: ['ball pnk-off', 'bulb blu-on'], score: null },
       { cl: ['ball pnk-on', 'bulb blu-off'], score: null },
     ],
+    explanation: 'When the button is off, the bulb should be on. When the button is on, the bulb should be off.',
   },
   {
     title: '"Or"',
@@ -57,6 +59,7 @@ export default [
       { cl: ['ball pnk-on', 'ball grn-off', 'bulb blu-on'], score: null },
       { cl: ['ball pnk-on', 'ball grn-on', 'bulb blu-on'], score: null },
     ],
+    explanation: 'The bulb should be on if either button is on.',
   },
   {
     title: '"And"',
@@ -79,6 +82,7 @@ export default [
       { cl: ['ball pnk-on', 'ball grn-off', 'bulb blu-off'], score: null },
       { cl: ['ball pnk-on', 'ball grn-on', 'bulb blu-on'], score: null },
     ],
+    explanation: 'The bulb should be on only when both buttons are on.',
   },
   {
     title: '"Xor"',
@@ -103,5 +107,6 @@ export default [
       { cl: ['ball pnk-on', 'ball grn-off', 'bulb blu-on'], score: null },
       { cl: ['ball pnk-on', 'ball grn-on', 'bulb blu-off'], score: null },
     ],
+    explanation: 'The bulb should be on when exactly one button is on.',
   },
 ]
