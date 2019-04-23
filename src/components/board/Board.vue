@@ -88,7 +88,7 @@
           @click="showObjectiveInfo = !showObjectiveInfo"
         >
           <img src="@/assets/img/info.svg" />
-          Click to toggle explanation
+          Click to toggle objective summary
         </div>
 
         <template v-if="!showObjectiveInfo">
