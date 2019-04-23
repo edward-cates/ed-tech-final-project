@@ -48,8 +48,16 @@ export default [
       GATE.NOT,
     ],
     objective: [
-      { cl: ['ball pnk-off', 'bulb blu-on'], score: null },
-      { cl: ['ball pnk-on', 'bulb blu-off'], score: null },
+      {
+        cl: ['ball pnk-off', 'bulb blu-on'],
+        score: null,
+        detail: 'When the pink button is off, the blue bulb should be on.',
+      },
+      {
+        cl: ['ball pnk-on', 'bulb blu-off'],
+        score: null,
+        detail: 'When the pink button is on, the blue bulb should be off.',
+      },
     ],
     explanation: 'When the button is off, the bulb should be on. When the button is on, the bulb should be off.',
   },
@@ -72,10 +80,26 @@ export default [
       GATE.OR,
     ],
     objective: [
-      { cl: ['ball pnk-off', 'ball grn-off', 'bulb blu-off'], score: null },
-      { cl: ['ball pnk-off', 'ball grn-on', 'bulb blu-on'], score: null },
-      { cl: ['ball pnk-on', 'ball grn-off', 'bulb blu-on'], score: null },
-      { cl: ['ball pnk-on', 'ball grn-on', 'bulb blu-on'], score: null },
+      {
+        cl: ['ball pnk-off', 'ball grn-off', 'bulb blu-off'],
+        score: null,
+        detail: 'Pink button off, green button off; blue bulb off.',
+      },
+      {
+        cl: ['ball pnk-off', 'ball grn-on', 'bulb blu-on'],
+        score: null,
+        detail: 'Pink button off, green button on; blue bulb on.',
+      },
+      {
+        cl: ['ball pnk-on', 'ball grn-off', 'bulb blu-on'],
+        score: null,
+        detail: 'Pink button on, green button off; blue bulb on.',
+      },
+      {
+        cl: ['ball pnk-on', 'ball grn-on', 'bulb blu-on'],
+        score: null,
+        detail: 'Pink button on, green button on; blue bulb on.',
+      },
     ],
     explanation: 'The bulb should be on if either button is on.',
   },
@@ -98,10 +122,26 @@ export default [
       GATE.OR,
     ],
     objective: [
-      { cl: ['ball pnk-off', 'ball grn-off', 'bulb blu-off'], score: null },
-      { cl: ['ball pnk-off', 'ball grn-on', 'bulb blu-off'], score: null },
-      { cl: ['ball pnk-on', 'ball grn-off', 'bulb blu-off'], score: null },
-      { cl: ['ball pnk-on', 'ball grn-on', 'bulb blu-on'], score: null },
+      {
+        cl: ['ball pnk-off', 'ball grn-off', 'bulb blu-off'],
+        score: null,
+        detail: 'Pink button off, green button off; blue bulb off.',
+      },
+      {
+        cl: ['ball pnk-off', 'ball grn-on', 'bulb blu-off'],
+        score: null,
+        detail: 'Pink button off, green button on; blue bulb off.',
+      },
+      {
+        cl: ['ball pnk-on', 'ball grn-off', 'bulb blu-off'],
+        score: null,
+        detail: 'Pink button on, green button off; blue bulb off.',
+      },
+      {
+        cl: ['ball pnk-on', 'ball grn-on', 'bulb blu-on'],
+        score: null,
+        detail: 'Pink button on, green button on; blue bulb on.',
+      },
     ],
     explanation: 'The bulb should be on only when both buttons are on.',
   },
@@ -126,10 +166,26 @@ export default [
       GATE.AND,
     ],
     objective: [
-      { cl: ['ball pnk-off', 'ball grn-off', 'bulb blu-off'], score: null },
-      { cl: ['ball pnk-off', 'ball grn-on', 'bulb blu-on'], score: null },
-      { cl: ['ball pnk-on', 'ball grn-off', 'bulb blu-on'], score: null },
-      { cl: ['ball pnk-on', 'ball grn-on', 'bulb blu-off'], score: null },
+      {
+        cl: ['ball pnk-off', 'ball grn-off', 'bulb blu-off'],
+        score: null,
+        detail: 'Pink button off, green button off; blue bulb off',
+      },
+      {
+        cl: ['ball pnk-off', 'ball grn-on', 'bulb blu-on'],
+        score: null,
+        detail: 'Pink button off, green button on; blue bulb on',
+      },
+      {
+        cl: ['ball pnk-on', 'ball grn-off', 'bulb blu-on'],
+        score: null,
+        detail: 'Pink button on, green button off; blue bulb on',
+      },
+      {
+        cl: ['ball pnk-on', 'ball grn-on', 'bulb blu-off'],
+        score: null,
+        detail: 'Pink button on, green button on; blue bulb off',
+      },
     ],
     explanation: 'The bulb should be on when exactly one button is on.',
   },
