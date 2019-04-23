@@ -58,12 +58,6 @@
         <img class="icon" v-else src="@/assets/img/caret-up.svg" />
       </div>
       <div v-if="menu.isObjectiveOpen" class="dropdown objective">
-        <img
-          @click="showObjectiveInfo = !showObjectiveInfo"
-          class="info"
-          src="@/assets/img/info.svg"
-        />
-
         <div class="dropdown-title">
           Level {{ currentLevel + 1 }}: {{ level.title }}
         </div>
@@ -79,7 +73,7 @@
           v-else-if="!isComplete"
           class="test-btn"
           @click="testAll">
-          Test
+          Check Solution
         </button>
 
         <button
@@ -88,6 +82,14 @@
           @click="nextLevel">
           Next Level
         </button>
+
+        <div
+          class="info"
+          @click="showObjectiveInfo = !showObjectiveInfo"
+        >
+          <img src="@/assets/img/info.svg" />
+          Explanation
+        </div>
 
         <template v-if="!showObjectiveInfo">
           <div
@@ -109,6 +111,10 @@
             <img class="score-check" v-else-if="row.score === true" src="@/assets/img/check.svg" />
 
             <img class="score-x" v-else-if="row.score === false" src="@/assets/img/x.svg" />
+
+            <div class="score-detail">
+              {{ row.detail }}
+            </div>
           </div>
         </template>
 

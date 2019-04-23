@@ -74,6 +74,7 @@
 
     <!-- text -->
     <img v-else-if="square.txt === 'Click Here'" src="@/assets/img/click-here.png" />
+    <img v-else-if="square.txt === 'Drag Slowly'" src="@/assets/img/drag-slowly.png" />
     <img v-else-if="square.txt === 'Release Here'" src="@/assets/img/release-here.png" />
 
     <!-- blank -->
