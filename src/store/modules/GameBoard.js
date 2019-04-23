@@ -15,6 +15,7 @@ const state = {
   mousePath: null,
   squares: [],
   level: null,
+  levels,
   viewport: {},
 }
 
@@ -100,6 +101,9 @@ const mutations = {
      * first square in the path.
      * After that, it's initialized below using the
      * previous square in the path.
+     *
+     * `!!conn.second` means wire is set. Will only be able to change
+     * this square if crossing over it.
      */
     if (conn.second && !canDraw()) {
       return
@@ -137,13 +141,20 @@ const mutations = {
 
       const lastSq = state.squares[lastRowIx][lastColIx]
 
+      /**
+       * `findSecond` looks to hook up to an input.
+       * Already do this if another wire hasn't already
+       * done it.
+       */
+      const isCross = !!state.squares[rowIx][colIx].cl
+
       Object.assign(conn, {
         first: {
           rowDiff: lastRowIx - rowIx,
           colDiff: lastColIx - colIx,
         },
         // deep copy `lastSq.conn.second`
-        second: findSecond({ rowIx, colIx }) || {
+        second: (isCross ? null : findSecond({ rowIx, colIx })) || {
           rowDiff: rowIx - lastRowIx,
           colDiff: colIx - lastColIx,
         },
@@ -545,7 +556,7 @@ const actions = {
 
         /**
          * Don't allow moves more than 1 square away.
-         * Diagonal squares can be 1 square away.
+         * Diagonal squares are 1 square away.
          */
         if (Math.abs(rowIx - lastRowIx) > 1 || Math.abs(colIx - lastColIx) > 1) {
           return
@@ -592,6 +603,9 @@ const actions = {
     }
 
     state.currentLevel += 1
+
+    localStorage.setItem('currentLevel', state.currentLevel)
+
     commit('render')
 
     if ([1, 2, 4].indexOf(state.currentLevel) > -1) {
@@ -773,6 +787,11 @@ const actions = {
     }
   },
 
+  setLevel({ commit }, { index }) {
+    state.currentLevel = index
+    commit('render')
+  },
+
   async testCase({ state, commit }, { rowIx: objectiveIx }) {
     const level = levels[state.currentLevel]
     const test = level.objective[objectiveIx]
@@ -824,7 +843,7 @@ const actions = {
      * Animate the drawing of the score.
      */
     test.score = null
-    setTimeout(() => {
+    // setTimeout(() => {
       /**
        * After the board is evaluated,
        * check the outputs (bulbs).
@@ -833,7 +852,7 @@ const actions = {
         const shouldBeOn = test.cl.find(o => o.indexOf(sq.cl.substr(0, 3)) > -1).indexOf('on') > -1
         return shouldBeOn === (sq.cl.indexOf('on') > -1)
       })
-    }, 100)
+    // }, 100)
   },
 }
 

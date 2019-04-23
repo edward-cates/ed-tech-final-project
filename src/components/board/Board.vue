@@ -11,6 +11,7 @@
       <div
         :key="rowIx"
         v-for="(row, rowIx) in squares"
+        @mousedown="toggleMenuBar('none')"
       >
         <square
           :key="colIx"
@@ -28,19 +29,24 @@
     <div class="menu">
       <div
         class="menu-bar"
-        @click="toggleMenuBar('Toolbox')"
+        @click="toggleMenuBar('Levels')"
       >
-        Toolbox
-        <img class="icon" v-if="!menu.isToolboxOpen" src="@/assets/img/caret-down.svg" />
+        Levels
+        <img class="icon" v-if="!menu.isLevelsOpen" src="@/assets/img/caret-down.svg" />
         <img class="icon" v-else src="@/assets/img/caret-up.svg" />
       </div>
-      <div v-if="menu.isToolboxOpen" class="dropdown toolbox">
-        <square
+      <div v-if="menu.isLevelsOpen" class="dropdown levels">
+        <div
           :key="index"
-          v-for="(tool, index) in level.tools"
-          :square="tool"
-          @mouseDown="currentTool = tool"
-        />
+          v-for="(level, index) in levels"
+        >
+          <div
+            class="level"
+            @click="setLevel({ index }); toggleMenuBar('Objective')"
+          >
+            Level {{ index + 1 }}: {{ level.title }}
+          </div>
+        </div>
       </div>
 
       <div
@@ -63,7 +69,14 @@
         </div>
 
         <button
-          v-if="!isComplete"
+          v-if="isTesting || isTestingAll"
+          class="test-btn loading-btn"
+        >
+          <img src="@/assets/img/loading.gif" />
+        </button>
+
+        <button
+          v-else-if="!isComplete"
           class="test-btn"
           @click="testAll">
           Test
@@ -91,7 +104,9 @@
               <div :class="cl" />
             </div>
 
-            <img class="score-check" v-if="row.score === true" src="@/assets/img/check.svg" />
+            <img class="score-loading" v-if="row.isLoading" src="@/assets/img/loading.gif" />
+
+            <img class="score-check" v-else-if="row.score === true" src="@/assets/img/check.svg" />
 
             <img class="score-x" v-else-if="row.score === false" src="@/assets/img/x.svg" />
           </div>
@@ -107,6 +122,23 @@
 
       <div
         class="menu-bar"
+        @click="toggleMenuBar('Toolbox')"
+      >
+        Toolbox
+        <img class="icon" v-if="!menu.isToolboxOpen" src="@/assets/img/caret-down.svg" />
+        <img class="icon" v-else src="@/assets/img/caret-up.svg" />
+      </div>
+      <div v-if="menu.isToolboxOpen" class="dropdown toolbox">
+        <square
+          :key="index"
+          v-for="(tool, index) in level.tools"
+          :square="tool"
+          @mouseDown="currentTool = tool"
+        />
+      </div>
+
+      <div
+        class="menu-bar"
         @click="toggleMenuBar('Controls')"
       >
         Controls
@@ -116,56 +148,56 @@
       <div v-if="menu.isControlsOpen" class="dropdown controls">
         <div class="dropdown-title">
           Game Controls
+        </div>
 
-          <div class="game-control-entry">
-            <div class="game-control-entry-title">
-              Drawing wire
-            </div>
-            <div class="game-control-entry-details">
-              To draw wire, press your mouse down on a square that is next to an ouput
-              and drag it to a square that is next to an input.
-            </div>
+        <div class="game-control-entry">
+          <div class="game-control-entry-title">
+            Drawing wire
           </div>
-
-          <div class="game-control-entry">
-            <div class="game-control-entry-title">
-              Toolbox
-            </div>
-            <div class="game-control-entry-details">
-              To use a tool from the Toolbox, click it once in the toolbox
-              and then click the square in which to place it.
-              Clicking and dragging also works.
-            </div>
+          <div class="game-control-entry-details">
+            To draw wire, press your mouse down on a square that is next to an ouput
+            and drag it to a square that is next to an input.
           </div>
+        </div>
 
-          <div class="game-control-entry">
-            <div class="game-control-entry-title">
-              Objective
-            </div>
-            <div class="game-control-entry-details">
-              In the Objective box, you can click a specific test case to see how it performs,
-              resulting in either a green check or a red X next to the test case.
-              You can also click "Test" to sequentially run through each test case.
-              The level is complete when each test case shows a green check beside it.
-            </div>
+        <div class="game-control-entry">
+          <div class="game-control-entry-title">
+            Toolbox
           </div>
-
-          <div class="game-control-entry">
-            <div class="game-control-entry-title">
-              Removing wire and tools
-            </div>
-            <div class="game-control-entry-details">
-              Right click on wire or a tool to remove it.
-            </div>
+          <div class="game-control-entry-details">
+            To use a tool from the Toolbox, click it once in the toolbox
+            and then click the square in which to place it.
+            Clicking and dragging also works.
           </div>
+        </div>
 
-          <div class="game-control-entry">
-            <div class="game-control-entry-title">
-              Pan the breadboard
-            </div>
-            <div class="game-control-entry-details">
-              You can pan the board using the arrow keys.
-            </div>
+        <div class="game-control-entry">
+          <div class="game-control-entry-title">
+            Objective
+          </div>
+          <div class="game-control-entry-details">
+            In the Objective box, you can click a specific test case to see how it performs,
+            resulting in either a green check or a red X next to the test case.
+            You can also click "Test" to sequentially run through each test case.
+            The level is complete when each test case shows a green check beside it.
+          </div>
+        </div>
+
+        <div class="game-control-entry">
+          <div class="game-control-entry-title">
+            Removing wire and tools
+          </div>
+          <div class="game-control-entry-details">
+            Right click on wire or a tool to remove it.
+          </div>
+        </div>
+
+        <div class="game-control-entry">
+          <div class="game-control-entry-title">
+            Pan the breadboard
+          </div>
+          <div class="game-control-entry-details">
+            You can pan the board using the arrow keys.
           </div>
         </div>
       </div>
@@ -190,7 +222,10 @@ export default {
       currentSquare: null,
       currentTool: null,
       isCtrl: false,
+      isTesting: false,
+      isTestingAll: false,
       menu: {
+        isLevelsOpen: false,
         isControlsOpen: false,
         isObjectiveOpen: false,
         isToolboxOpen: false,
@@ -208,6 +243,7 @@ export default {
       'isLoading',
       'squares',
       'level',
+      'levels',
     ]),
     isComplete() {
       return this.level.objective.every(o => o.score === true)
@@ -241,6 +277,7 @@ export default {
       // 'mouseUp',
       'nextLevel',
       'pan',
+      'setLevel',
       'testCase',
     ]),
     keyDown(ev) {
@@ -305,11 +342,17 @@ export default {
       }
     },
     async test({ rowIx }) {
-      this.toggleMenuBar('Objective')
+      this.isTesting = true
+
+      Vue.set(this.level.objective[rowIx], 'isLoading', true)
       await this.testCase({ rowIx })
-      this.toggleMenuBar('Objective')
+      this.level.objective[rowIx].isLoading = false
+
+      this.isTesting = false
     },
     async testAll() {
+      this.isTestingAll = true
+
       /**
        * Reset all previous scores.
        */
@@ -320,8 +363,9 @@ export default {
        */
       for (let rowIx = 0; rowIx < this.level.objective.length; ++rowIx) {
         await this.test({ rowIx })
-        await new Promise(resolve => setTimeout(resolve, 1000))
       }
+
+      this.isTestingAll = false
     },
     toggleMenuBar(k) {
       Object.keys(this.menu).forEach((key) => {

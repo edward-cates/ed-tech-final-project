@@ -92,8 +92,23 @@ body {
         .dropdown-title {
           font-size: 20px;
           padding-top: 22px;
-          padding-left: 60px;
           margin-bottom: 10px;
+          text-align: center;
+        }
+      }
+
+      .levels {
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 20px 20px;
+
+        .level {
+          margin-bottom: 20px;
+          font-size: 20px;
+
+          &:hover {
+            cursor: pointer;
+          }
         }
       }
 
@@ -105,9 +120,8 @@ body {
 
         .game-control-entry {
           border-top: 1px solid white;
-          margin-top: 20px;
-          padding: 10px 0;
-          padding-right: 10px;
+          margin-top: 10px;
+          padding: 20px 20px;
         }
 
         .game-control-entry-title {
@@ -127,9 +141,10 @@ body {
         height: calc(100vh - 100px);
         overflow-y: auto;
         overflow-x: hidden;
+        padding: 20px 10px;
 
         .square {
-          margin-bottom: 8px;
+          margin-bottom: 20px;
         }
       }
 
@@ -149,8 +164,17 @@ body {
           top: 16px;
         }
 
+        .loading-btn {
+          padding: 0 20px;
+
+          img {
+            height: 34px;
+            margin-top: 4px;
+          }
+        }
+
         .nxt-lvl-btn {
-          background-color: $menu;
+          background-color: #0f4f20;
           border: 1px solid white;
         }
 
@@ -188,6 +212,11 @@ body {
             .orange-off { background-color: rgba(255, 150, 0, 0.25); }
           }
 
+          .score-loading {
+            height: 30px;
+            margin-left: 4px;
+          }
+
           .score-check {
             margin-bottom: 8px;
             margin-left: 8px;
@@ -205,7 +234,7 @@ body {
 
         .info {
           position: absolute;
-          left: 20px;
+          left: 70px;
           top: 20px;
           cursor: pointer;
         }

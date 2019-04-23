@@ -4,11 +4,13 @@ export default [
   {
     title: 'Turn on light',
     squares: {
-      2: {
-        7: { cl: 'blu-lgt-s-off', conn: { rowDiff: 1, colDiff: 0 } },
+      4: {
+        9: { txt: 'Release Here' },
+        10: { cl: 'blu-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
       },
-      5: {
+      6: {
         2: { cl: 'pnk-btn-off' },
+        3: { txt: 'Click Here' },
       },
     },
     tools: [
@@ -22,10 +24,10 @@ export default [
   {
     title: 'Invert signal',
     squares: {
-      2: {
-        7: { cl: 'blu-lgt-s-off', conn: { rowDiff: 1, colDiff: 0 } },
+      4: {
+        10: { cl: 'blu-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
       },
-      5: {
+      6: {
         2: { cl: 'pnk-btn-off' },
       },
     },

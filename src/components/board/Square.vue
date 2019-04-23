@@ -72,8 +72,19 @@
     <img v-else-if="square.cl === 'and-gate-110'" src="@/assets/img/and-gate/110.png" />
     <img v-else-if="square.cl === 'and-gate-111'" src="@/assets/img/and-gate/111.png" />
 
+    <!-- text -->
+    <img v-else-if="square.txt === 'Click Here'" src="@/assets/img/click-here.png" />
+    <img v-else-if="square.txt === 'Release Here'" src="@/assets/img/release-here.png" />
+
     <!-- blank -->
     <img v-else src="@/assets/img/blank-square.svg" style="visibility: hidden" />
+
+    <div
+      v-if="square.text"
+      class="text"
+    >
+      {{ square.text }}
+    </div>
   </div>
 </template>
 
