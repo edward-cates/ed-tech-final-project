@@ -105,7 +105,7 @@ export default [
   },
   {
     title: '"And"',
-    alert: 'Level 4. No new tools this time.',
+    alert: 'Level 4. No new tools this time, just the old ones.',
     squares: {
       2: {
         2: { cl: 'grn-btn-off' },
