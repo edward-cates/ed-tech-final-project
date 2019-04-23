@@ -11,6 +11,7 @@ const state = {
   boardShiftY: 0,
   boardWidth: 0,
   currentLevel: 0,
+  isAlertDismissed: false,
   isLoading: true,
   mousePath: null,
   squares: [],
@@ -441,6 +442,8 @@ const mutations = {
   },
 
   render(state) {
+    state.isAlertDismissed = false
+
     let vertBoxes = Math.ceil(state.board.height / sideLength)
     let horizBoxes = Math.ceil(state.board.width / sideLength)
     /**
@@ -487,6 +490,10 @@ const mutations = {
 }
 
 const actions = {
+  dismissAlert() {
+    state.isAlertDismissed = true
+  },
+
   loadViewport({ state, commit }, { board }) {
     state.board = board
     commit('render')
@@ -604,7 +611,6 @@ const actions = {
     }
 
     state.currentLevel += 1
-    console.log(state.currentLevel, state.maxLevel)
 
     if (state.currentLevel > state.maxLevel) {
       localStorage.setItem('maxLevel', state.currentLevel)
@@ -612,12 +618,6 @@ const actions = {
     }
 
     commit('render')
-
-    if ([1, 2, 4].indexOf(state.currentLevel) > -1) {
-      setTimeout(() => {
-        alert('There are new tools in your toolbox!')
-      }, 200)
-    }
   },
 
   pan({ commit }, direction) {

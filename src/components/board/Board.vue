@@ -88,7 +88,7 @@
           @click="showObjectiveInfo = !showObjectiveInfo"
         >
           <img src="@/assets/img/info.svg" />
-          Explanation
+          Click to toggle explanation
         </div>
 
         <template v-if="!showObjectiveInfo">
@@ -139,8 +139,8 @@
           :key="index"
           v-for="(tool, index) in level.tools"
           :square="tool"
-          @mouseDown="currentTool = tool"
-        />
+          :tooltip="tool.tooltip"
+          @mouseDown="currentTool = tool" />
       </div>
 
       <div
@@ -161,19 +161,21 @@
             Drawing wire
           </div>
           <div class="game-control-entry-details">
-            To draw wire, press your mouse down on a square that is next to an ouput
-            and drag it to a square that is next to an input.
+            To draw wire, press your mouse down on a square that is <i>next</i> to an <b>ouput</b>
+            and drag it to a square that is <i>next</i> to an <b>input</b>.
           </div>
         </div>
 
         <div class="game-control-entry">
           <div class="game-control-entry-title">
-            Toolbox
+            Tools & Toolbox
           </div>
           <div class="game-control-entry-details">
             To use a tool from the Toolbox, click it once in the toolbox
             and then click the square in which to place it.
             Clicking and dragging also works.
+            <br><br>
+            Arrows pointing to the center of a tool are <b>inputs</b>, and arrows pointing away from center are <b>outputs</b>.
           </div>
         </div>
 
@@ -182,10 +184,10 @@
             Objective
           </div>
           <div class="game-control-entry-details">
-            In the Objective box, you can click a specific test case to see how it performs,
-            resulting in either a green check or a red X next to the test case.
-            You can also click "Test" to sequentially run through each test case.
-            The level is complete when each test case shows a green check beside it.
+            In the Objective box, you can click a specific <b>test case</b> to see how it performs,
+            resulting in either a green check or a red X next to the <b>test case</b>.
+            You can also click "Check Solution" to sequentially run through each <b>test case</b>.
+            The level is complete when each <b>test case</b> shows a green check beside it.
           </div>
         </div>
 
@@ -206,6 +208,16 @@
             You can pan the board using the arrow keys.
           </div>
         </div>
+      </div>
+    </div>
+
+    <div
+      class="modal"
+      v-if="level && level.alert && !isAlertDismissed">
+      <div class="text">
+        {{ level.alert }}
+        <br><br>
+        <button @click="dismissAlert">ok</button>
       </div>
     </div>
   </div>
@@ -246,6 +258,7 @@ export default {
       'boardShiftY',
       'boardWidth',
       'currentLevel',
+      'isAlertDismissed',
       'isLoading',
       'squares',
       'level',
@@ -278,6 +291,7 @@ export default {
   },
   methods: {
     ...mapActions('GameBoard', [
+      'dismissAlert',
       'loadViewport',
       // 'mouseDown',
       // 'mouseEnter',

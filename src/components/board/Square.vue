@@ -86,6 +86,13 @@
     >
       {{ square.text }}
     </div>
+
+    <div
+      class="tooltip"
+      v-if="tooltip">
+      {{ tooltip }}
+      <br>
+    </div>
   </div>
 </template>
 
@@ -94,6 +101,7 @@ export default {
   name: 'Square',
   props: {
     square: {},
+    tooltip: {},
   },
 }
 </script>

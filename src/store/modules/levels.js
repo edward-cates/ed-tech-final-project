@@ -3,6 +3,7 @@ import GATE from './gates'
 export default [
   {
     title: 'Turn on light',
+    alert: 'Level 1. Pass the Objective to complete the level.',
     squares: {
       4: {
         9: { txt: 'Release Here' },
@@ -34,6 +35,7 @@ export default [
   },
   {
     title: 'Invert signal',
+    alert: 'Level 2. There is a new tool in your toolbox.',
     squares: {
       4: {
         10: { cl: 'blu-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
@@ -53,6 +55,7 @@ export default [
   },
   {
     title: '"Or"',
+    alert: 'Level 3. There is a new tool in your toolbox.',
     squares: {
       2: {
         7: { cl: 'blu-lgt-s-off', conn: { rowDiff: 1, colDiff: 0 } },
@@ -76,6 +79,7 @@ export default [
   },
   {
     title: '"And"',
+    alert: 'Level 4. No new tools this time.',
     squares: {
       2: {
         7: { cl: 'blu-lgt-s-off', conn: { rowDiff: 1, colDiff: 0 } },
@@ -99,6 +103,7 @@ export default [
   },
   {
     title: '"Xor"',
+    alert: 'Level 5. New tools!',
     squares: {
       2: {
         7: { cl: 'blu-lgt-s-off', conn: { rowDiff: 1, colDiff: 0 } },

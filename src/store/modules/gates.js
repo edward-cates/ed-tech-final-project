@@ -19,6 +19,7 @@ const SPLIT = {
       },
     }
   },
+  tooltip: 'Each output equals the input',
 }
 
 const NOT = {
@@ -38,6 +39,7 @@ const NOT = {
       },
     }
   },
+  tooltip: 'The output equals the opposite of the input',
 }
 
 const OR = {
@@ -60,6 +62,7 @@ const OR = {
       },
     }
   },
+  tooltip: 'Output is on if ANY of the inputs are on',
 }
 
 const AND = {
@@ -82,6 +85,7 @@ const AND = {
       },
     }
   },
+  tooltip: 'Output is on if ALL of the inputs are on',
 }
 
 export default {
