@@ -38,7 +38,7 @@
       <div v-if="menu.isLevelsOpen" class="dropdown levels">
         <div
           :key="index"
-          v-for="(level, index) in levels"
+          v-for="(level, index) in levels.filter((l, i) => i <= maxLevel)"
         >
           <div
             class="level"
@@ -244,6 +244,7 @@ export default {
       'squares',
       'level',
       'levels',
+      'maxLevel',
     ]),
     isComplete() {
       return this.level.objective.every(o => o.score === true)

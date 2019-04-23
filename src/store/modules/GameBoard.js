@@ -16,6 +16,7 @@ const state = {
   squares: [],
   level: null,
   levels,
+  maxLevel: +localStorage.getItem('maxLevel') || 0,
   viewport: {},
 }
 
@@ -603,8 +604,12 @@ const actions = {
     }
 
     state.currentLevel += 1
+    console.log(state.currentLevel, state.maxLevel)
 
-    localStorage.setItem('currentLevel', state.currentLevel)
+    if (state.currentLevel > state.maxLevel) {
+      localStorage.setItem('maxLevel', state.currentLevel)
+      state.maxLevel = state.currentLevel
+    }
 
     commit('render')
 
