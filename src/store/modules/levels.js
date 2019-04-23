@@ -58,11 +58,13 @@ export default [
     alert: 'Level 3. There is a new tool in your toolbox.',
     squares: {
       2: {
-        7: { cl: 'blu-lgt-s-off', conn: { rowDiff: 1, colDiff: 0 } },
+        2: { cl: 'grn-btn-off' },
       },
-      5: {
+      4: {
+        10: { cl: 'blu-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
+      },
+      6: {
         2: { cl: 'pnk-btn-off' },
-        5: { cl: 'grn-btn-off' },
       },
     },
     tools: [
@@ -82,11 +84,13 @@ export default [
     alert: 'Level 4. No new tools this time.',
     squares: {
       2: {
-        7: { cl: 'blu-lgt-s-off', conn: { rowDiff: 1, colDiff: 0 } },
+        2: { cl: 'grn-btn-off' },
       },
-      5: {
+      4: {
+        10: { cl: 'blu-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
+      },
+      6: {
         2: { cl: 'pnk-btn-off' },
-        5: { cl: 'grn-btn-off' },
       },
     },
     tools: [
@@ -106,11 +110,13 @@ export default [
     alert: 'Level 5. New tools!',
     squares: {
       2: {
-        7: { cl: 'blu-lgt-s-off', conn: { rowDiff: 1, colDiff: 0 } },
+        2: { cl: 'grn-btn-off' },
       },
-      5: {
+      4: {
+        10: { cl: 'blu-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
+      },
+      6: {
         2: { cl: 'pnk-btn-off' },
-        5: { cl: 'grn-btn-off' },
       },
     },
     tools: [
