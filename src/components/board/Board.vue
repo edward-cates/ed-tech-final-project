@@ -81,6 +81,15 @@
 
         <div class="game-control-entry">
           <div class="game-control-entry-title">
+            Removing wire and tools
+          </div>
+          <div class="game-control-entry-details">
+            Right click on wire or a tool to remove it.
+          </div>
+        </div>
+
+        <div class="game-control-entry">
+          <div class="game-control-entry-title">
             Drawing wire
           </div>
           <div class="game-control-entry-details">
@@ -111,15 +120,6 @@
             resulting in either a green check or a red X next to the <b>test case</b>.
             You can also click "Check Solution" to sequentially run through each <b>test case</b>.
             The level is complete when each <b>test case</b> shows a green check beside it.
-          </div>
-        </div>
-
-        <div class="game-control-entry">
-          <div class="game-control-entry-title">
-            Removing wire and tools
-          </div>
-          <div class="game-control-entry-details">
-            Right click on wire or a tool to remove it.
           </div>
         </div>
 
