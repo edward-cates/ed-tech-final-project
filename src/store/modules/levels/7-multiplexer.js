@@ -30,12 +30,12 @@ export default {
       detail: 'Pink button off, green button off; blue bulb off',
     },
     {
-      cl: ['ball ylw-off', 'ball pnk-off', 'ball grn-on', 'bulb blu-on'],
+      cl: ['ball ylw-off', 'ball pnk-off', 'ball grn-on', 'bulb blu-off'],
       score: null,
       detail: 'Pink button off, green button on; blue bulb on',
     },
     {
-      cl: ['ball ylw-off', 'ball pnk-on', 'ball grn-off', 'bulb blu-off'],
+      cl: ['ball ylw-off', 'ball pnk-on', 'ball grn-off', 'bulb blu-on'],
       score: null,
       detail: 'Pink button on, green button off; blue bulb on',
     },
@@ -50,12 +50,12 @@ export default {
       detail: 'Pink button off, green button off; blue bulb off',
     },
     {
-      cl: ['ball ylw-on', 'ball pnk-off', 'ball grn-on', 'bulb blu-off'],
+      cl: ['ball ylw-on', 'ball pnk-off', 'ball grn-on', 'bulb blu-on'],
       score: null,
       detail: 'Pink button off, green button on; blue bulb on',
     },
     {
-      cl: ['ball ylw-on', 'ball pnk-on', 'ball grn-off', 'bulb blu-on'],
+      cl: ['ball ylw-on', 'ball pnk-on', 'ball grn-off', 'bulb blu-off'],
       score: null,
       detail: 'Pink button on, green button off; blue bulb on',
     },

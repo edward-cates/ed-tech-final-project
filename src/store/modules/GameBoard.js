@@ -5,6 +5,8 @@ const sideLength = 100 + 2 + 4 // width + border + margin
 import levels from './levels'
 import gates from './gates'
 
+localStorage.clear()
+
 const state = {
   board: {},
   boardHeight: 0,

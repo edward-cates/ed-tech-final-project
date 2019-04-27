@@ -142,27 +142,6 @@
         Level {{ currentLevel + 1 }}: {{ level.title }}
       </div>
 
-      <button
-        v-if="isTesting || isTestingAll"
-        class="test-btn loading-btn"
-      >
-        <img src="@/assets/img/loading.gif" />
-      </button>
-
-      <button
-        v-else
-        class="test-btn"
-        @click="testAll">
-        Check Solution
-      </button>
-
-      <button
-        v-bind:disabled="!isComplete"
-        class="test-btn nxt-lvl-btn"
-        @click="nextLevel">
-        Next Level
-      </button>
-
       <div
         class="info"
         @click="showObjectiveInfo = !showObjectiveInfo"
@@ -206,6 +185,27 @@
         <br><br>
         Click "Check Solution" to check your solution and make it to the next level.
       </div>
+
+      <button
+        v-if="isTesting || isTestingAll"
+        class="test-btn loading-btn"
+      >
+        <img src="@/assets/img/loading.gif" />
+      </button>
+
+      <button
+        v-else
+        class="test-btn"
+        @click="testAll">
+        Check Your Solution
+      </button>
+
+      <button
+        v-bind:disabled="!isComplete"
+        class="test-btn nxt-lvl-btn"
+        @click="nextLevel">
+        Go to the Next Level
+      </button>
     </div>
 
     <div
