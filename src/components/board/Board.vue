@@ -42,87 +42,10 @@
         >
           <div
             class="level"
-            @click="setLevel({ index }); toggleMenuBar('Objective')"
+            @click="setLevel({ index })"
           >
             Level {{ index + 1 }}: {{ level.title }}
           </div>
-        </div>
-      </div>
-
-      <div
-        class="menu-bar"
-        @click="toggleMenuBar('Objective')"
-      >
-        Objective
-        <img class="icon" v-if="!menu.isObjectiveOpen" src="@/assets/img/caret-down.svg" />
-        <img class="icon" v-else src="@/assets/img/caret-up.svg" />
-      </div>
-      <div v-if="menu.isObjectiveOpen" class="dropdown objective">
-        <div class="dropdown-title">
-          Level {{ currentLevel + 1 }}: {{ level.title }}
-        </div>
-
-        <button
-          v-if="isTesting || isTestingAll"
-          class="test-btn loading-btn"
-        >
-          <img src="@/assets/img/loading.gif" />
-        </button>
-
-        <button
-          v-else-if="!isComplete"
-          class="test-btn"
-          @click="testAll">
-          Check Solution
-        </button>
-
-        <button
-          v-else
-          class="test-btn nxt-lvl-btn"
-          @click="nextLevel">
-          Next Level
-        </button>
-
-        <div
-          class="info"
-          @click="showObjectiveInfo = !showObjectiveInfo"
-        >
-          <img src="@/assets/img/info.svg" />
-          Click to toggle objective summary
-        </div>
-
-        <template v-if="!showObjectiveInfo">
-          <div
-            :key="rowIx"
-            v-for="(row, rowIx) in level.objective"
-            class="row"
-            @click="test({ rowIx })"
-          >
-            <div
-              :key="colIx"
-              v-for="(cl, colIx) in row.cl"
-              class="cell"
-            >
-              <div :class="cl" />
-            </div>
-
-            <img class="score-loading" v-if="row.isLoading" src="@/assets/img/loading.gif" />
-
-            <img class="score-check" v-else-if="row.score === true" src="@/assets/img/check.svg" />
-
-            <img class="score-x" v-else-if="row.score === false" src="@/assets/img/x.svg" />
-
-            <div class="score-detail">
-              {{ row.detail }}
-            </div>
-          </div>
-        </template>
-
-        <div
-          v-else
-          class="explanation"
-        >
-          {{ level.explanation }}
         </div>
       </div>
 
@@ -208,6 +131,80 @@
             You can pan the board using the arrow keys.
           </div>
         </div>
+      </div>
+    </div>
+
+    <div
+      v-if="level"
+      class="objective"
+    >
+      <div class="title">
+        Level {{ currentLevel + 1 }}: {{ level.title }}
+      </div>
+
+      <button
+        v-if="isTesting || isTestingAll"
+        class="test-btn loading-btn"
+      >
+        <img src="@/assets/img/loading.gif" />
+      </button>
+
+      <button
+        v-else
+        class="test-btn"
+        @click="testAll">
+        Check Solution
+      </button>
+
+      <button
+        v-bind:disabled="!isComplete"
+        class="test-btn nxt-lvl-btn"
+        @click="nextLevel">
+        Next Level
+      </button>
+
+      <div
+        class="info"
+        @click="showObjectiveInfo = !showObjectiveInfo"
+      >
+        <img src="@/assets/img/info.svg" />
+        Click to toggle objective summary
+      </div>
+
+      <template v-if="!showObjectiveInfo">
+        <div
+          :key="rowIx"
+          v-for="(row, rowIx) in level.objective"
+          class="row"
+          @click="test({ rowIx })"
+        >
+          <div
+            :key="colIx"
+            v-for="(cl, colIx) in row.cl"
+            class="cell"
+          >
+            <div :class="cl" />
+          </div>
+
+          <img class="score-loading" v-if="row.isLoading" src="@/assets/img/loading.gif" />
+
+          <img class="score-check" v-else-if="row.score === true" src="@/assets/img/check.svg" />
+
+          <img class="score-x" v-else-if="row.score === false" src="@/assets/img/x.svg" />
+
+          <div class="score-detail">
+            {{ row.detail }}
+          </div>
+        </div>
+      </template>
+
+      <div
+        v-else
+        class="explanation"
+      >
+        {{ level.explanation }}
+        <br><br>
+        Click "Check Solution" to check your solution and make it to the next level.
       </div>
     </div>
 
@@ -339,6 +336,7 @@ export default {
           Object.assign(this.currentSquare, this.currentTool.create(), { tmp: false })
           this.currentTool = null
           this.menu.isToolboxOpen = false
+          this.$store.dispatch('GameBoard/mouseUp') // render board
         }
       } else {
         this.$store.dispatch('GameBoard/mouseUp', pos)

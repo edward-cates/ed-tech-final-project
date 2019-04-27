@@ -14,6 +14,9 @@
     <!---- pink ---->
     <img v-else-if="square.cl === 'pnk-btn-off'" src="@/assets/img/pnk-btn/off/nsew.svg" />
     <img v-else-if="square.cl === 'pnk-btn-on'" src="@/assets/img/pnk-btn/on/nsew.svg" />
+    <!---- yellow ---->
+    <img v-else-if="square.cl === 'ylw-btn-off'" src="@/assets/img/ylw-btn/off/nsew.svg" />
+    <img v-else-if="square.cl === 'ylw-btn-on'" src="@/assets/img/ylw-btn/on/nsew.svg" />
 
     <!-- lights -->
     <!---- orange ---->
@@ -63,14 +66,10 @@
     <img v-else-if="square.cl === 'or-gate-110'" src="@/assets/img/or-gate/110.png" />
     <img v-else-if="square.cl === 'or-gate-111'" src="@/assets/img/or-gate/111.png" />
     <!---- and ---->
-    <img v-else-if="square.cl === 'and-gate-000'" src="@/assets/img/and-gate/000.png" />
-    <img v-else-if="square.cl === 'and-gate-001'" src="@/assets/img/and-gate/001.png" />
-    <img v-else-if="square.cl === 'and-gate-010'" src="@/assets/img/and-gate/010.png" />
-    <img v-else-if="square.cl === 'and-gate-011'" src="@/assets/img/and-gate/011.png" />
-    <img v-else-if="square.cl === 'and-gate-100'" src="@/assets/img/and-gate/100.png" />
-    <img v-else-if="square.cl === 'and-gate-101'" src="@/assets/img/and-gate/101.png" />
-    <img v-else-if="square.cl === 'and-gate-110'" src="@/assets/img/and-gate/110.png" />
-    <img v-else-if="square.cl === 'and-gate-111'" src="@/assets/img/and-gate/111.png" />
+    <img v-else-if="square.cl === 'and-gate-00'" src="@/assets/img/and-gate/00.png" />
+    <img v-else-if="square.cl === 'and-gate-01'" src="@/assets/img/and-gate/01.png" />
+    <img v-else-if="square.cl === 'and-gate-10'" src="@/assets/img/and-gate/10.png" />
+    <img v-else-if="square.cl === 'and-gate-11'" src="@/assets/img/and-gate/11.png" />
 
     <!-- text -->
     <img v-else-if="square.txt === 'Click Here'" src="@/assets/img/click-here.png" />

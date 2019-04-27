@@ -62,30 +62,29 @@ const OR = {
       },
     }
   },
-  tooltip: 'Output is on if ANY of the inputs are on',
+  tooltip: 'Output is on if any input is on',
 }
 
 const AND = {
-  cl: 'and-gate-000',
+  cl: 'and-gate-00',
   create() {
     return {
-      cl: 'and-gate-000',
+      cl: 'and-gate-00',
       inputs: [
         { rowDiff: -1, colDiff: 0, isOn: false },
         { rowDiff: 0, colDiff: -1, isOn: false },
-        { rowDiff: 1, colDiff: 0, isOn: false },
       ],
       outputs: [
         { rowDiff: 0, colDiff: 1, isOn: false },
       ],
       evaluate() {
         const cl = this.inputs.map(input => input.isOn ? '1' : '0').join('')
-        this.outputs[0].isOn = cl === '111'
+        this.outputs[0].isOn = cl === '11'
         this.cl = `and-gate-${cl}`
       },
     }
   },
-  tooltip: 'Output is on if ALL of the inputs are on',
+  tooltip: 'Output is on if both inputs are on',
 }
 
 export default {

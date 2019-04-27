@@ -3,6 +3,7 @@ import Vue from 'vue'
 const sideLength = 100 + 2 + 4 // width + border + margin
 
 import levels from './levels'
+import gates from './gates'
 
 const state = {
   board: {},
@@ -454,14 +455,29 @@ const mutations = {
     horizBoxes = horizBoxes + ((horizBoxes + 1) % 2)
 
     const level = levels[state.currentLevel]
+    const solution = JSON.parse(localStorage.getItem(`level-${state.currentLevel}-solution`))
     const squares = []
 
     for (let row = 0; row < vertBoxes; ++row) {
       squares[row] = []
       for (let col = 0; col < horizBoxes; ++col) {
-        // TODO this is temporary
-        const isBlank = !level.squares[row]
-        squares[row][col] = isBlank ? {} : (level.squares[row][col] || {})
+        if (solution && solution[row] && solution[row][col]) {
+          const sq = solution[row][col]
+
+          if (sq.cl.indexOf('gate') > -1) {
+            const ix = sq.cl.indexOf('gate-')
+            const gateType = sq.cl.substr(0, ix)
+            squares[row][col] = Object.values(gates)
+              .find(g => g.cl.indexOf(gateType) === 0).create()
+          } else if (sq.cl.indexOf('wire') > -1) {
+            squares[row][col] = solution[row][col]
+            squares[row][col].cl = squares[row][col].cl.replace('on', 'off')
+          }
+        } else if (level.squares[row] && level.squares[row][col]) {
+          squares[row][col] = level.squares[row][col]
+        } else {
+          squares[row][col] = {}
+        }
       }
     }
 
@@ -476,6 +492,21 @@ const mutations = {
 
     state.boardShiftX = -(extraX / 2)
     state.boardShiftY = -(extraY / 2)
+  },
+
+  saveSolution() {
+    const boardState = {}
+
+    state.squares.forEach((row, rowIx) => {
+      row.forEach((sq, colIx) => {
+        if (sq.cl && (sq.cl.indexOf('gate') > -1 || sq.cl.indexOf('wire') > -1)) {
+          boardState[rowIx] = boardState[rowIx] || {}
+          boardState[rowIx][colIx] = sq
+        }
+      })
+    })
+
+    localStorage.setItem(`level-${state.currentLevel}-solution`, JSON.stringify(boardState))
   },
 
   togglePower(state, { rowIx, colIx }) {
@@ -602,6 +633,7 @@ const actions = {
     }
 
     commit('evaluateBoard')
+    commit('saveSolution')
   },
 
   nextLevel({ state, commit }) {

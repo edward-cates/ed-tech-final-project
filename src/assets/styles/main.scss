@@ -23,7 +23,133 @@ body {
 
   .board {
     height: 100%;
-    width: 100%;
+    width: calc(100% - 400px);
+
+    .objective {
+      position: absolute;
+      top: 0px;
+      bottom: 0px;
+      right: 0px;
+      width: 400px;
+      background-color: $menu;
+
+      .title {
+        font-size: 24px;
+        text-align: center;
+        padding-top: 20px;
+      }
+
+      .test-btn {
+        cursor: pointer;
+        width: 100%;
+        margin-top: 10px;
+        background-color: #101010;
+        border: none;
+        color: white;
+        font-size: 20px;
+        outline: none;
+        padding: 10px 20px;
+      }
+
+      .loading-btn {
+        padding: 0 20px;
+
+        img {
+          height: 34px;
+          margin-top: 4px;
+        }
+      }
+
+      .nxt-lvl-btn {
+        background-color: #0f4f20;
+
+        &:disabled {
+          opacity: 0.25;
+        }
+      }
+
+      .row {
+        padding: 15px 10px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #4f4f4f;
+
+          .score-detail {
+            display: block;
+          }
+        }
+
+        .cell {
+          display: inline-block;
+          margin-left: 10px;
+          margin-right: 10px;
+          margin-top: 4px;
+
+          .ball {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+          }
+
+          .bulb {
+            width: 40px;
+            height: 30px;
+          }
+
+          .pnk-on { background-color: rgba(255, 0, 150, 1.0); }
+          .pnk-off { background-color: rgba(255, 0, 150, 0.25); }
+          .grn-on { background-color: rgba(0, 255, 0, 1.0); }
+          .grn-off { background-color: rgba(0, 255, 0, 0.25); }
+          .blu-on { background-color: rgba(0, 200, 255, 1.0); }
+          .ylw-off { background-color: rgba(255, 255, 0, 0.25); }
+          .ylw-on { background-color: rgba(255, 200, 0, 1.0); }
+          .blu-off { background-color: rgba(0, 200, 255, 0.25); }
+          .orange-on { background-color: rgba(255, 150, 0, 1.0); }
+          .orange-off { background-color: rgba(255, 150, 0, 0.25); }
+        }
+
+        .score-loading {
+          height: 30px;
+          margin-left: 4px;
+        }
+
+        .score-check {
+          margin-bottom: 8px;
+          margin-left: 4px;
+        }
+
+        .score-x {
+          margin-bottom: 3px;
+          margin-left: 4px;
+        }
+
+        .score-detail {
+          display: none;
+          margin-left: 10px;
+          padding-top: 4px;
+        }
+      }
+
+      .explanation {
+        padding: 20px 20px;
+        font-size: 18px;
+      }
+
+      .info {
+        position: relative;
+        margin-left: 46px;
+        padding-top: 16px;
+        cursor: default;
+
+        img {
+          position: absolute;
+          height: 20px;
+          left: -26px;
+          top: 15px;
+        }
+      }
+    }
 
     .viewport {
       position: relative;
@@ -185,115 +311,6 @@ body {
             .tooltip {
               display: block;
             }
-          }
-        }
-      }
-
-      .objective {
-        padding-bottom: 10px;
-        width: 100%;
-
-        .test-btn {
-          cursor: pointer;
-          background-color: #101010;
-          border: none;
-          color: white;
-          font-size: 20px;
-          outline: none;
-          padding: 10px 20px;
-          position: absolute;
-          right: 16px;
-          top: 16px;
-        }
-
-        .loading-btn {
-          padding: 0 20px;
-
-          img {
-            height: 34px;
-            margin-top: 4px;
-          }
-        }
-
-        .nxt-lvl-btn {
-          background-color: #0f4f20;
-          border: 1px solid white;
-        }
-
-        .row {
-          padding: 15px 10px;
-          cursor: pointer;
-
-          &:hover {
-            background-color: #4f4f4f;
-          }
-
-          .cell {
-            display: inline-block;
-            margin-left: 10px;
-            margin-right: 10px;
-            margin-top: 4px;
-
-            .ball {
-              width: 30px;
-              height: 30px;
-              border-radius: 50%;
-            }
-
-            .bulb {
-              width: 40px;
-              height: 30px;
-            }
-
-            .pnk-on { background-color: rgba(255, 0, 150, 1.0); }
-            .pnk-off { background-color: rgba(255, 0, 150, 0.25); }
-            .grn-on { background-color: rgba(0, 255, 0, 1.0); }
-            .grn-off { background-color: rgba(0, 255, 0, 0.25); }
-            .blu-on { background-color: rgba(0, 200, 255, 1.0); }
-            .blu-off { background-color: rgba(0, 200, 255, 0.25); }
-            .orange-on { background-color: rgba(255, 150, 0, 1.0); }
-            .orange-off { background-color: rgba(255, 150, 0, 0.25); }
-          }
-
-          .score-loading {
-            height: 30px;
-            margin-left: 4px;
-          }
-
-          .score-check {
-            margin-bottom: 8px;
-            margin-left: 4px;
-          }
-
-          .score-x {
-            margin-bottom: 3px;
-            margin-left: 4px;
-          }
-
-          .score-detail {
-            position: relative;
-            display: inline-block;
-            bottom: 7px;
-            left: 10px;
-          }
-        }
-
-        .explanation {
-          padding: 20px 20px;
-          font-size: 18px;
-        }
-
-        .info {
-          position: relative;
-          margin-left: 46px;
-          padding-top: 6px;
-          cursor: default;
-
-          img {
-            position: absolute;
-            height: 20px;
-            left: -26px;
-            top: 5px;
           }
         }
       }
