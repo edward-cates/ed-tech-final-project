@@ -79,7 +79,7 @@ const AND = {
       ],
       evaluate() {
         const cl = this.inputs.map(input => input.isOn ? '1' : '0').join('')
-        this.outputs[0].isOn = cl === '11'
+        this.outputs[0].isOn = (cl === '11')
         this.cl = `and-gate-${cl}`
       },
     }
@@ -87,9 +87,60 @@ const AND = {
   tooltip: 'Output is on if both inputs are on',
 }
 
+const MUX = {
+  cl: 'mux-gate-000',
+  create() {
+    return {
+      cl: 'mux-gate-000',
+      inputs: [
+        { rowDiff: -1, colDiff: 0, isOn: false },
+        { rowDiff: 0, colDiff: -1, isOn: false },
+        { rowDiff: 1, colDiff: 0, isOn: false },
+      ],
+      outputs: [
+        { rowDiff: 0, colDiff: 1, isOn: false },
+      ],
+      evaluate() {
+        const [a, b, c] = this.inputs.map(input => input.isOn)
+        this.outputs[0].isOn = (!a ? b : c)
+
+        const cl = this.inputs.map(input => input.isOn ? '1' : '0').join('')
+        this.cl = `mux-gate-${cl}`
+      },
+    }
+  },
+  tooltip: 'If top input is off, output equals left input; if top input is on, output equals bottom input',
+}
+
+const XOR = {
+  cl: 'xor-gate-00',
+  create() {
+    return {
+      cl: 'xor-gate-00',
+      inputs: [
+        { rowDiff: 0, colDiff: -1, isOn: false },
+        { rowDiff: 1, colDiff: 0, isOn: false },
+      ],
+      outputs: [
+        { rowDiff: 0, colDiff: 1, isOn: false },
+      ],
+      evaluate() {
+        const [a, b] = this.inputs.map(input => input.isOn)
+        this.outputs[0].isOn = (a !== b)
+
+        const cl = this.inputs.map(input => input.isOn ? '1' : '0').join('')
+        this.cl = `xor-gate-${cl}`
+      },
+    }
+  },
+  tooltip: 'Output is on if exactly one input is on',
+}
+
 export default {
   SPLIT,
   NOT,
   OR,
   AND,
+  MUX,
+  XOR,
 }

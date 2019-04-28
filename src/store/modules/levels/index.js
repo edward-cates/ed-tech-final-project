@@ -5,8 +5,12 @@ import four from './4-and'
 import five from './5-xor'
 import six from './6-decoder'
 import seven from './7-multiplexer'
+import eight from './8-mux'
+import nine from './9-half-adder'
+import ten from './10-ten'
 
 export default [
+  nine,
   one,
   two,
   three,
@@ -14,4 +18,6 @@ export default [
   five,
   six,
   seven,
+  eight,
+  ten,
 ]

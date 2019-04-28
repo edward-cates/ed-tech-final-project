@@ -74,6 +74,20 @@
     <img v-else-if="square.cl === 'and-gate-01'" src="@/assets/img/and-gate/01.png" />
     <img v-else-if="square.cl === 'and-gate-10'" src="@/assets/img/and-gate/10.png" />
     <img v-else-if="square.cl === 'and-gate-11'" src="@/assets/img/and-gate/11.png" />
+    <!---- mux ---->
+    <img v-else-if="square.cl === 'mux-gate-000'" src="@/assets/img/mux-gate/000.png" />
+    <img v-else-if="square.cl === 'mux-gate-001'" src="@/assets/img/mux-gate/001.png" />
+    <img v-else-if="square.cl === 'mux-gate-010'" src="@/assets/img/mux-gate/010.png" />
+    <img v-else-if="square.cl === 'mux-gate-011'" src="@/assets/img/mux-gate/011.png" />
+    <img v-else-if="square.cl === 'mux-gate-100'" src="@/assets/img/mux-gate/100.png" />
+    <img v-else-if="square.cl === 'mux-gate-101'" src="@/assets/img/mux-gate/101.png" />
+    <img v-else-if="square.cl === 'mux-gate-110'" src="@/assets/img/mux-gate/110.png" />
+    <img v-else-if="square.cl === 'mux-gate-111'" src="@/assets/img/mux-gate/111.png" />
+    <!---- xor ---->
+    <img v-else-if="square.cl === 'xor-gate-00'" src="@/assets/img/xor-gate/00.png" />
+    <img v-else-if="square.cl === 'xor-gate-01'" src="@/assets/img/xor-gate/01.png" />
+    <img v-else-if="square.cl === 'xor-gate-10'" src="@/assets/img/xor-gate/10.png" />
+    <img v-else-if="square.cl === 'xor-gate-11'" src="@/assets/img/xor-gate/11.png" />
 
     <!-- text -->
     <img v-else-if="square.txt === 'Click Here'" src="@/assets/img/click-here.png" />
