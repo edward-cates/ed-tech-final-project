@@ -2,7 +2,7 @@ import GATE from '../gates'
 
 export default {
   title: '"Xor"',
-  alert: 'Level 6. New tool!',
+  alert: 'Level 5. New tool!',
   squares: {
     2: {
       2: { cl: 'grn-btn-off' },
