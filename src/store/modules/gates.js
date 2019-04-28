@@ -39,7 +39,7 @@ const NOT = {
       },
     }
   },
-  tooltip: 'The output equals the opposite of the input',
+  tooltip: 'The output is the opposite of the input',
 }
 
 const OR = {

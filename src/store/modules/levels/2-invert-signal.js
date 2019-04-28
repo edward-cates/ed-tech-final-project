@@ -2,7 +2,7 @@ import GATE from '../gates'
 
 export default {
   title: 'Invert signal',
-  alert: 'Level 2. There is a new tool in your toolbox.',
+  alert: 'Level 2. Check the toolbox',
   squares: {
     4: {
       10: { cl: 'blu-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
@@ -18,13 +18,13 @@ export default {
     {
       cl: ['ball pnk-off', 'bulb blu-on'],
       score: null,
-      detail: 'When the pink button is off, the blue bulb should be on.',
+      detail: 'When the pink button is off, the blue light should be on.',
     },
     {
       cl: ['ball pnk-on', 'bulb blu-off'],
       score: null,
-      detail: 'When the pink button is on, the blue bulb should be off.',
+      detail: 'When the pink button is on, the blue light should be off.',
     },
   ],
-  explanation: 'When the button is off, the bulb should be on. When the button is on, the bulb should be off.',
+  explanation: 'The light should be off when the button is on and vice versa.',
 }

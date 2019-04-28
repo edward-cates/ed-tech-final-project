@@ -2,7 +2,7 @@ import GATE from '../gates'
 
 export default {
   title: '"Multiplexer"',
-  alert: 'Level 6. New tools!',
+  alert: 'Level 7.',
   squares: {
     1: {
       6: { cl: 'ylw-btn-off' },
@@ -20,50 +20,49 @@ export default {
   tools: [
     GATE.NOT,
     GATE.OR,
-    GATE.SPLIT,
     GATE.AND,
   ],
   objective: [
     {
       cl: ['ball ylw-off', 'ball pnk-off', 'ball grn-off', 'bulb blu-off'],
       score: null,
-      detail: 'Pink button off, green button off; blue bulb off',
+      detail: 'When the yellow and pink buttons are off, the blue light should be off',
     },
     {
       cl: ['ball ylw-off', 'ball pnk-off', 'ball grn-on', 'bulb blu-off'],
       score: null,
-      detail: 'Pink button off, green button on; blue bulb on',
+      detail: 'When the yellow and pink buttons are off, the blue light should be off',
     },
     {
       cl: ['ball ylw-off', 'ball pnk-on', 'ball grn-off', 'bulb blu-on'],
       score: null,
-      detail: 'Pink button on, green button off; blue bulb on',
+      detail: 'When the yellow button is off and the pink button is on, the blue light should be on',
     },
     {
       cl: ['ball ylw-off', 'ball pnk-on', 'ball grn-on', 'bulb blu-on'],
       score: null,
-      detail: 'Pink button on, green button on; blue bulb off',
+      detail: 'When the yellow button is off and the pink button is on, the blue light should be on',
     },
     {
       cl: ['ball ylw-on', 'ball pnk-off', 'ball grn-off', 'bulb blu-off'],
       score: null,
-      detail: 'Pink button off, green button off; blue bulb off',
+      detail: 'When the yellow button is on and the green button is off, the blue light should be off',
     },
     {
       cl: ['ball ylw-on', 'ball pnk-off', 'ball grn-on', 'bulb blu-on'],
       score: null,
-      detail: 'Pink button off, green button on; blue bulb on',
+      detail: 'When the yellow are green buttons are on, the blue light should be on',
     },
     {
       cl: ['ball ylw-on', 'ball pnk-on', 'ball grn-off', 'bulb blu-off'],
       score: null,
-      detail: 'Pink button on, green button off; blue bulb on',
+      detail: 'When the yellow button is on and the green button is off, the blue light should be off',
     },
     {
       cl: ['ball ylw-on', 'ball pnk-on', 'ball grn-on', 'bulb blu-on'],
       score: null,
-      detail: 'Pink button on, green button on; blue bulb off',
+      detail: 'When the yellow are green buttons are on, the blue light should be on',
     },
   ],
-  explanation: 'The bulb should be on when exactly one button is on.',
+  explanation: 'The yellow button chooses which button controls the light.',
 }

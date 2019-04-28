@@ -22,23 +22,23 @@ export default {
     {
       cl: ['ball pnk-off', 'ball grn-off', 'bulb blu-off'],
       score: null,
-      detail: 'Pink button off, green button off; blue bulb off.',
+      detail: 'When both buttons are off, the blue light should be off.',
     },
     {
       cl: ['ball pnk-off', 'ball grn-on', 'bulb blu-off'],
       score: null,
-      detail: 'Pink button off, green button on; blue bulb off.',
+      detail: 'When only the green button is on, the blue light should off.',
     },
     {
       cl: ['ball pnk-on', 'ball grn-off', 'bulb blu-off'],
       score: null,
-      detail: 'Pink button on, green button off; blue bulb off.',
+      detail: 'When only the pink button is on, the blue light should be off.',
     },
     {
       cl: ['ball pnk-on', 'ball grn-on', 'bulb blu-on'],
       score: null,
-      detail: 'Pink button on, green button on; blue bulb on.',
+      detail: 'When both buttons are on, the blue light should be on.',
     },
   ],
-  explanation: 'The bulb should be on only when both buttons are on.',
+  explanation: 'The light should only be on when both buttons are on.',
 }

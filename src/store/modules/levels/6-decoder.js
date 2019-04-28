@@ -2,7 +2,7 @@ import GATE from '../gates'
 
 export default {
   title: '"Decoder"',
-  alert: 'Level 6. New tools!',
+  alert: 'Level 6. Pretty lights',
   squares: {
     1: {
       10: { cl: 'red-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
@@ -32,23 +32,23 @@ export default {
     {
       cl: ['ball pnk-off', 'ball grn-off', 'bulb red-on', 'bulb blu-off', 'bulb org-off', 'bulb pur-off'],
       score: null,
-      detail: 'Pink button off, green button off; blue bulb off',
+      detail: 'When both buttons are off, only the red light should be on',
     },
     {
       cl: ['ball pnk-off', 'ball grn-on', 'bulb red-off', 'bulb blu-on', 'bulb org-off', 'bulb pur-off'],
       score: null,
-      detail: 'Pink button off, green button on; blue bulb on',
+      detail: 'When only the green button is on, only the blue light should be on',
     },
     {
       cl: ['ball pnk-on', 'ball grn-off', 'bulb red-off', 'bulb blu-off', 'bulb org-on', 'bulb pur-off'],
       score: null,
-      detail: 'Pink button on, green button off; blue bulb on',
+      detail: 'When only the pink button is on, only the orange light should be on',
     },
     {
       cl: ['ball pnk-on', 'ball grn-on', 'bulb red-off', 'bulb blu-off', 'bulb org-off', 'bulb pur-on'],
       score: null,
-      detail: 'Pink button on, green button on; blue bulb off',
+      detail: 'When both buttons are on, only the purple light should be on',
     },
   ],
-  explanation: 'The bulb should be on when exactly one button is on.',
+  explanation: 'Use the buttons to select which light is lit.',
 }

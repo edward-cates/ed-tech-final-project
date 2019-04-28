@@ -93,8 +93,8 @@
             Drawing wire
           </div>
           <div class="game-control-entry-details">
-            To draw wire, press your mouse down on a square that is <i>next</i> to an <b>ouput</b>
-            and drag it to a square that is <i>next</i> to an <b>input</b>.
+            To draw wire, press your mouse down on a square that is <i>next</i> to an ouput
+            and drag it to a square that is <i>next</i> to an input.
           </div>
         </div>
 
@@ -107,7 +107,7 @@
             and then click the square in which to place it.
             Clicking and dragging also works.
             <br><br>
-            Arrows pointing to the center of a tool are <b>inputs</b>, and arrows pointing away from center are <b>outputs</b>.
+            Arrows pointing to the center of a tool are input, and arrows pointing away from center are outputs.
           </div>
         </div>
 
@@ -116,10 +116,10 @@
             Objective
           </div>
           <div class="game-control-entry-details">
-            In the Objective box, you can click a specific <b>test case</b> to see how it performs,
-            resulting in either a green check or a red X next to the <b>test case</b>.
-            You can also click "Check Solution" to sequentially run through each <b>test case</b>.
-            The level is complete when each <b>test case</b> shows a green check beside it.
+            In the Objective box, you can click a specific test case to see how it performs,
+            resulting in either a green check or a red X next to the test case.
+            You can also click "Check Your Solution" to sequentially run through each test case.
+            The level is complete when each test case shows a green check beside it.
           </div>
         </div>
 
@@ -183,7 +183,7 @@
       >
         {{ level.explanation }}
         <br><br>
-        Click "Check Solution" to check your solution and make it to the next level.
+        Click "Check Your Solution" to check your solution and make it to the next level.
       </div>
 
       <button

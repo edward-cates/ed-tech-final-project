@@ -1,6 +1,6 @@
 export default {
   title: 'Turn on light',
-  alert: 'Level 1. Pass the Objective to complete the level.',
+  alert: 'Level 1. Turn on the light',
   squares: {
     4: {
       9: { txt: 'Release Here' },
@@ -20,13 +20,13 @@ export default {
     {
       cl: ['ball pnk-off', 'bulb blu-off'],
       score: null,
-      detail: 'When the pink button is off, the blue bulb should be off.',
+      detail: 'When the pink button is off, the blue light should be off.',
     },
     {
       cl: ['ball pnk-on', 'bulb blu-on'],
       score: null,
-      detail: 'When the pink button is on, the blue bulb should be on.',
+      detail: 'When the pink button is on, the blue light should be on.',
     },
   ],
-  explanation: 'The button should power on the bulb.',
+  explanation: 'The button should turn on the light.',
 }

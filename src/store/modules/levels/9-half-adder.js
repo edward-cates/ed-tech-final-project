@@ -2,7 +2,7 @@ import GATE from '../gates'
 
 export default {
   title: 'Half Adder',
-  alert: 'Level 6. New tools!',
+  alert: 'Level 9. New tool!',
   squares: {
     2: {
       2: { cl: 'grn-btn-off' },
@@ -21,23 +21,23 @@ export default {
     {
       cl: ['ball pnk-off', 'ball grn-off', 'bulb blu-off', 'bulb org-off'],
       score: null,
-      detail: 'Pink button off, green button off; blue bulb off',
+      detail: 'When both buttons are off, both lights should be off',
     },
     {
       cl: ['ball pnk-off', 'ball grn-on', 'bulb blu-on', 'bulb org-off'],
       score: null,
-      detail: 'Pink button off, green button on; blue bulb on',
+      detail: 'When only the green button is on, the blue light should be on and the orange light should be off',
     },
     {
       cl: ['ball pnk-on', 'ball grn-off', 'bulb blu-on', 'bulb org-off'],
       score: null,
-      detail: 'Pink button on, green button off; blue bulb on',
+      detail: 'When only the pink button is on, the blue light should be on and the orange light should be off',
     },
     {
       cl: ['ball pnk-on', 'ball grn-on', 'bulb blu-off', 'bulb org-on'],
       score: null,
-      detail: 'Pink button on, green button on; blue bulb off',
+      detail: 'When both buttons are on, both lights should be on',
     },
   ],
-  explanation: 'The bulb should be on when exactly one button is on.',
+  explanation: 'The blue light is on if exactly one button is on; the orange light is on if both buttons are on.',
 }
