@@ -160,6 +160,7 @@ const ADD = {
       },
     }
   },
+  tooltip: 'The right output is XOR, the bottom output is AND',
 }
 
 export default {
