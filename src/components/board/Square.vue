@@ -88,6 +88,11 @@
     <img v-else-if="square.cl === 'xor-gate-01'" src="@/assets/img/xor-gate/01.png" />
     <img v-else-if="square.cl === 'xor-gate-10'" src="@/assets/img/xor-gate/10.png" />
     <img v-else-if="square.cl === 'xor-gate-11'" src="@/assets/img/xor-gate/11.png" />
+    <!---- add ---->
+    <img v-else-if="square.cl === 'add-gate-00'" src="@/assets/img/add-gate/00.png" />
+    <img v-else-if="square.cl === 'add-gate-01'" src="@/assets/img/add-gate/01.png" />
+    <img v-else-if="square.cl === 'add-gate-10'" src="@/assets/img/add-gate/10.png" />
+    <img v-else-if="square.cl === 'add-gate-11'" src="@/assets/img/add-gate/11.png" />
 
     <!-- text -->
     <img v-else-if="square.txt === 'Click Here'" src="@/assets/img/click-here.png" />

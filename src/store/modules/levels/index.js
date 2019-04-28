@@ -7,10 +7,10 @@ import six from './6-decoder'
 import seven from './7-multiplexer'
 import eight from './8-mux'
 import nine from './9-half-adder'
-import ten from './10-ten'
+import ten from './10-full-adder'
 
 export default [
-  nine,
+  ten,
   one,
   two,
   three,
@@ -19,5 +19,5 @@ export default [
   six,
   seven,
   eight,
-  ten,
+  nine,
 ]

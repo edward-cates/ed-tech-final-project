@@ -136,6 +136,32 @@ const XOR = {
   tooltip: 'Output is on if exactly one input is on',
 }
 
+const ADD = {
+  cl: 'add-gate-00',
+  create() {
+    return {
+      cl: 'add-gate-00',
+      inputs: [
+        { rowDiff: -1, colDiff: 0, isOn: false },
+        { rowDiff: 0, colDiff: -1, isOn: false },
+      ],
+      outputs: [
+        { rowDiff: 0, colDiff: 1, isOn: false },
+        { rowDiff: 1, colDiff: 0, isOn: false },
+      ],
+      evaluate() {
+        const [a, b] = this.inputs.map(input => input.isOn)
+
+        this.outputs[0].isOn = (a !== b)
+        this.outputs[1].isOn = (a && b)
+
+        const cl = this.inputs.map(input => input.isOn ? '1' : '0').join('')
+        this.cl = `add-gate-${cl}`
+      },
+    }
+  },
+}
+
 export default {
   SPLIT,
   NOT,
@@ -143,4 +169,5 @@ export default {
   AND,
   MUX,
   XOR,
+  ADD,
 }
