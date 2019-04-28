@@ -10,9 +10,9 @@ import nine from './9-half-adder'
 import ten from './10-full-adder'
 
 export default [
+  three,
   one,
   two,
-  three,
   four,
   five,
   six,

@@ -306,7 +306,29 @@ export default {
     },
     mouseDown({ rowIx, colIx }) {
       if (!this.currentTool) {
-        this.$store.dispatch('GameBoard/mouseDown', { rowIx, colIx })
+        const sq = this.squares[rowIx][colIx]
+
+        const areSurroundingsEmpty = [[0,-1],[0,1],[-1,0],[1,0]].every(([rowDiff, colDiff]) => {
+          return !this.squares[rowIx + rowDiff][colIx + colDiff].cl
+        })
+
+        if (sq.cl && sq.cl.indexOf('gate') > -1 && areSurroundingsEmpty) {
+          this.currentTool = this.level.tools.find((tool) => {
+            const prefix = tool.cl.substr(0, tool.cl.indexOf('gate-'))
+            return (sq.cl.indexOf(prefix) === 0)
+          })
+
+          /**
+           * FIXME
+           * This logic should reside in the `GameBoard` VueX controller
+           */
+          Vue.set(this.squares[rowIx], colIx, {
+            cl: this.currentTool.cl,
+            tmp: true,
+          })
+        } else {
+          this.$store.dispatch('GameBoard/mouseDown', { rowIx, colIx })
+        }
       }
     },
     mouseEnter({ sq, rowIx, colIx }) {

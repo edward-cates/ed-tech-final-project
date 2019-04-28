@@ -534,9 +534,11 @@ const actions = {
 
   mouseDown({ commit }, { rowIx, colIx }) {
     let sq = state.squares[rowIx][colIx]
+
     if (sq.cl && sq.cl.indexOf('btn') > -1) {
       return
     }
+
     /**
      * Don't let wires be drawn that aren't connected to anything.
      *
@@ -563,7 +565,8 @@ const actions = {
         aligns = true
       } else if (sq.cl && sq.cl.indexOf('gate') > -1) {
         /**
-         * A gate output must align with diffs
+         * Check all the gate's outputs to see if
+         * the gate aligns with this square.
          */
         aligns = sq.outputs.some(({ rowDiff: rd, colDiff: cd }) => rowDiff === -rd && colDiff === -cd)
       }
