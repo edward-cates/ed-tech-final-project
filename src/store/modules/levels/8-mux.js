@@ -1,7 +1,7 @@
 import GATE from '../gates'
 
 export default {
-  title: 'Mux',
+  title: '"Mux"',
   alert: 'Level 8. New tool!',
   squares: {
     1: {

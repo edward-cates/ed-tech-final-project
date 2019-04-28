@@ -1,7 +1,7 @@
 import GATE from '../gates'
 
 export default {
-  title: 'Full Adder',
+  title: '"Full Adder"',
   alert: 'Level 10. New tool!',
   squares: {
     1: {

@@ -460,10 +460,8 @@ const mutations = {
     const solution = JSON.parse(localStorage.getItem(`level-${state.currentLevel}-solution`))
 
     if (solution) {
-      state.squares = solution
-
-      for (let row = 0; row < state.squares.length; row += 1) {
-        for (let col = 0; col < state.squares[row].length; col += 1) {
+      for (let row = 0; row < solution.length; row += 1) {
+        for (let col = 0; col < solution[row].length; col += 1) {
           if (solution && solution[row] && solution[row][col]) {
             const sq = solution[row][col]
 
@@ -472,15 +470,18 @@ const mutations = {
             } else if (sq.cl.indexOf('gate') > -1) {
               const ix = sq.cl.indexOf('gate-')
               const gateType = sq.cl.substr(0, ix)
-              state.squares[row][col] = Object.values(gates)
+              solution[row][col] = Object.values(gates)
                 .find(g => g.cl.indexOf(gateType) === 0).create()
             } else if (['wire', 'btn', 'lgt'].some(key => sq.cl.indexOf(key) > -1)) {
-              state.squares[row][col] = solution[row][col]
-              state.squares[row][col].cl = state.squares[row][col].cl.replace('on', 'off')
+              solution[row][col].cl = solution[row][col].cl.replace('on', 'off')
             }
           }
         }
       }
+
+      state.squares = solution
+      vertBoxes = solution.length
+      horizBoxes = solution[0].length
     } else {
       const squares = []
 
@@ -533,6 +534,7 @@ const actions = {
   loadViewport({ state, commit }, { board }) {
     state.board = board
     commit('render')
+    commit('evaluateBoard')
   },
 
   mouseDown({ commit }, { rowIx, colIx }) {
@@ -646,7 +648,7 @@ const actions = {
 
   nextLevel({ state, commit }) {
     if (state.currentLevel === levels.length - 1) {
-      alert('You beat the game!')
+      alert('Congratulations, You beat the game! For the next challenge, Google "Nand Game". You can also Google "Digital Logic Design" or any of the level names in quotations from this game.')
       return
     }
 
@@ -658,6 +660,7 @@ const actions = {
     }
 
     commit('render')
+    commit('evaluateBoard')
   },
 
   pan({ commit }, direction) {
