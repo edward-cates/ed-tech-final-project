@@ -4,11 +4,11 @@ export default {
   title: '"Half Adder"',
   alert: 'Level 9. New tool!',
   squares: {
-    2: {
+    4: {
       2: { cl: 'grn-btn-off' },
       10: { cl: 'blu-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
     },
-    6: {
+    8: {
       2: { cl: 'pnk-btn-off' },
       10: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
     },

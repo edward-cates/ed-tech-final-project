@@ -165,7 +165,7 @@
             <div :class="cl" />
           </div>
 
-          <img class="score-loading" v-if="row.isLoading" src="@/assets/img/loading.gif" />
+          <img class="score-loading" v-if="row.isLoading" src="@/assets/img/loading-small.gif" />
 
           <img class="score-check" v-else-if="row.score === true" src="@/assets/img/check.svg" />
 

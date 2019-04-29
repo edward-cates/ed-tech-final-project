@@ -4,16 +4,16 @@ export default {
   title: '"Multiplexer"',
   alert: 'Level 7.',
   squares: {
-    1: {
+    3: {
       6: { cl: 'ylw-btn-off' },
     },
-    2: {
+    4: {
       2: { cl: 'grn-btn-off' },
     },
-    4: {
+    6: {
       10: { cl: 'blu-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
     },
-    6: {
+    8: {
       2: { cl: 'pnk-btn-off' },
     },
   },

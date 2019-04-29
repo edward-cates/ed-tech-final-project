@@ -226,9 +226,13 @@ const mutations = {
       colIx,
       isOn,
     }) => {
+      if (!state.squares[rowIx]) {
+        return
+
+      }
       const sq = state.squares[rowIx][colIx]
 
-      if (!sq.cl) {
+      if (!sq || !sq.cl) {
         return
       }
 
@@ -453,8 +457,8 @@ const mutations = {
      * Make # boxes in each direction odd
      * so there can be a centered box in the middle.
      */
-    vertBoxes = vertBoxes + ((vertBoxes + 1) % 2)
-    horizBoxes = horizBoxes + ((horizBoxes + 1) % 2)
+    vertBoxes = Math.max(12, vertBoxes + ((vertBoxes + 1) % 2))
+    horizBoxes = Math.max(12, horizBoxes + ((horizBoxes + 1) % 2))
 
     const level = levels[state.currentLevel]
     const solution = JSON.parse(localStorage.getItem(`level-${state.currentLevel}-solution`))

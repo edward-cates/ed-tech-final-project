@@ -4,22 +4,22 @@ export default {
   title: '"Decoder"',
   alert: 'Level 6. Pretty lights',
   squares: {
-    1: {
+    3: {
       10: { cl: 'red-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
     },
-    2: {
+    4: {
       2: { cl: 'grn-btn-off' },
     },
-    3: {
+    5: {
       10: { cl: 'blu-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
     },
-    5: {
+    7: {
       10: { cl: 'org-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
     },
-    6: {
+    8: {
       2: { cl: 'pnk-btn-off' },
     },
-    7: {
+    9: {
       10: { cl: 'pur-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
     },
   },

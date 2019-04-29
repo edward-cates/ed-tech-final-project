@@ -4,13 +4,13 @@ export default {
   title: '"Or"',
   alert: 'Level 3. There is a new tool in your toolbox.',
   squares: {
-    2: {
+    4: {
       2: { cl: 'grn-btn-off' },
     },
-    4: {
+    6: {
       10: { cl: 'blu-lgt-w-off', conn: { rowDiff: 0, colDiff: -1 } },
     },
-    6: {
+    8: {
       2: { cl: 'pnk-btn-off' },
     },
   },
